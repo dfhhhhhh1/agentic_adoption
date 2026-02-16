@@ -2,3 +2,16 @@ myEnv/
 __pycache__/
 *.pyc
 .DS_Store
+node_modules/
+.pnp
+.pnp.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.eslintcache
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
