@@ -1,8 +1,7 @@
-"""LLM extraction agent — uses PydanticAI to pull structured pet data from Markdown.
+"""LLM extraction agent — uses raw Ollama API to pull structured pet data from Markdown.
 
 The agent receives cleaned Markdown from Crawl4AI and returns validated PetSchema
-objects.  It uses Ollama (Llama 3.1 8B) as the local LLM backend.
-PydanticAI handles schema validation and automatic retries on malformed output.
+objects. It uses Ollama (Llama 3.1 8B) as the local LLM backend.
 """
 
 from __future__ import annotations
@@ -36,70 +35,18 @@ RULES:
 """
 
 
-# ── PydanticAI-based extraction (preferred) ───────────────────────────────────
-
-def extract_pets_pydantic_ai(
-    markdown: str,
-    page_url: str = "",
-    shelter_name: str = "Unknown",
-) -> list[PetSchema]:
-    """Extract pet listings using PydanticAI for schema-validated output.
-
-    PydanticAI will automatically retry if the LLM output doesn't match
-    the PetListingBatch schema.
-    """
-    try:
-        from pydantic_ai import Agent
-
-        settings = get_settings()
-
-        agent = Agent(
-            model=f"ollama:{settings.ollama_model}",
-            system_prompt=EXTRACTION_SYSTEM_PROMPT,
-            result_type=PetListingBatch,
-            retries=3,
-        )
-
-        user_prompt = (
-            f"Extract all pet listings from this shelter page.\n"
-            f"Shelter: {shelter_name}\n"
-            f"URL: {page_url}\n\n"
-            f"--- PAGE CONTENT ---\n{markdown[:8000]}\n--- END ---"
-        )
-
-        result = agent.run_sync(user_prompt)
-        pets = result.data.pets
-
-        # Backfill shelter info + URL on each pet
-        for pet in pets:
-            if not pet.shelter_name or pet.shelter_name == "Unknown":
-                pet.shelter_name = shelter_name
-            if not pet.listing_url:
-                pet.listing_url = page_url
-
-        logger.info("PydanticAI extraction complete",
-                     page_url=page_url, pets_found=len(pets))
-        return pets
-
-    except ImportError:
-        logger.warning("PydanticAI not available, falling back to raw Ollama extraction")
-        return extract_pets_ollama_raw(markdown, page_url, shelter_name)
-    except Exception as e:
-        logger.error("PydanticAI extraction failed", error=str(e), page_url=page_url)
-        return extract_pets_ollama_raw(markdown, page_url, shelter_name)
-
-
-# ── Fallback: Direct Ollama API extraction ────────────────────────────────────
+# ── Direct Ollama API extraction ────────────────────────────────────
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
-def extract_pets_ollama_raw(
+def extract_pets_ollama(
     markdown: str,
     page_url: str = "",
     shelter_name: str = "Unknown",
 ) -> list[PetSchema]:
-    """Fallback extraction using Ollama's chat API directly with JSON mode.
+    """Extract pet listings using Ollama's chat API directly with JSON mode.
 
-    Useful if PydanticAI is not installed or has compatibility issues.
+    This is the primary method - PydanticAI doesn't have reliable Ollama support,
+    so we use the raw API with schema validation.
     """
     settings = get_settings()
 
@@ -115,20 +62,29 @@ def extract_pets_ollama_raw(
         f"Return ONLY valid JSON, no explanations."
     )
 
-    with httpx.Client(timeout=120.0) as client:
-        resp = client.post(
-            f"{settings.ollama_base_url}/api/chat",
-            json={
-                "model": settings.ollama_model,
-                "messages": [
-                    {"role": "system", "content": EXTRACTION_SYSTEM_PROMPT},
-                    {"role": "user", "content": user_prompt},
-                ],
-                "format": "json",
-                "stream": False,
-            },
-        )
-        resp.raise_for_status()
+    logger.info("Calling Ollama for extraction", url=page_url, model=settings.ollama_model)
+
+    try:
+        with httpx.Client(timeout=180.0) as client:
+            resp = client.post(
+                f"{settings.ollama_base_url}/api/chat",
+                json={
+                    "model": settings.ollama_model,
+                    "messages": [
+                        {"role": "system", "content": EXTRACTION_SYSTEM_PROMPT},
+                        {"role": "user", "content": user_prompt},
+                    ],
+                    "format": "json",
+                    "stream": False,
+                },
+            )
+            resp.raise_for_status()
+    except httpx.TimeoutException as e:
+        logger.error("Ollama request timed out", url=page_url, error=str(e))
+        raise
+    except httpx.ConnectError as e:
+        logger.error("Cannot connect to Ollama", base_url=settings.ollama_base_url, error=str(e))
+        raise
 
     content = resp.json()["message"]["content"]
 
@@ -140,9 +96,13 @@ def extract_pets_ollama_raw(
         import re
         json_match = re.search(r"\{.*\}", content, re.DOTALL)
         if json_match:
-            data = json.loads(json_match.group())
+            try:
+                data = json.loads(json_match.group())
+            except json.JSONDecodeError:
+                logger.error("Could not parse extracted JSON", content=content[:500])
+                return []
         else:
-            logger.error("Could not parse LLM output as JSON", content=content[:500])
+            logger.error("No JSON found in LLM output", content=content[:500])
             return []
 
     # Validate each pet through Pydantic
@@ -162,7 +122,7 @@ def extract_pets_ollama_raw(
         except Exception as e:
             logger.warning("Failed to validate pet record", error=str(e), raw=raw)
 
-    logger.info("Ollama raw extraction complete",
+    logger.info("Ollama extraction complete",
                  page_url=page_url, pets_found=len(pets))
     return pets
 
@@ -176,6 +136,6 @@ def extract_pets(
 ) -> list[PetSchema]:
     """Extract pet listings from Markdown content.
 
-    Tries PydanticAI first, falls back to raw Ollama if needed.
+    Uses Ollama directly with JSON mode for reliable extraction.
     """
-    return extract_pets_pydantic_ai(markdown, page_url, shelter_name)
+    return extract_pets_ollama(markdown, page_url, shelter_name)

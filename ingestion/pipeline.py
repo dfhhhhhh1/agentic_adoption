@@ -16,7 +16,7 @@ from datetime import datetime, timezone
 import structlog
 
 from config.settings import get_settings
-from db.models import get_session_factory, CrawlJob
+from db.models import get_session_factory, get_engine, init_db, CrawlJob
 from db.repository import PetRepository, ShelterRepository
 from ingestion.crawler import crawl_shelter
 from ingestion.extractor import extract_pets
@@ -60,6 +60,7 @@ async def run_ingestion_pipeline(
     )
     session.add(job)
     session.commit()
+    job_id = job.id  # Store the ID early
 
     all_pets: list[PetSchema] = []
     errors: list[str] = []
@@ -72,7 +73,11 @@ async def run_ingestion_pipeline(
             max_depth=max_depth,
             max_pages=max_pages,
         )
-        job.pages_crawled = len(pages)
+        
+        # Update and commit immediately
+        session.query(CrawlJob).filter(CrawlJob.id == job_id).update(
+            {"pages_crawled": len(pages)}
+        )
         session.commit()
 
         logger.info("Crawl phase complete", pages_found=len(pages))
@@ -138,31 +143,43 @@ async def run_ingestion_pipeline(
                 shelter_id=shelter.id,
                 embeddings=embeddings,
             )
-            job.pets_extracted = len(stored)
+            pets_extracted = len(stored)
         else:
-            job.pets_extracted = 0
+            pets_extracted = 0
 
-        job.status = "completed"
-        job.completed_at = datetime.now(timezone.utc)
-        job.errors = errors
+        # ── 7. Final job status update ────────────────────────────────────
+        job_status = "completed"
+        job_completed_at = datetime.now(timezone.utc)
 
     except Exception as e:
         logger.error("Pipeline failed", error=str(e))
-        job.status = "failed"
-        job.completed_at = datetime.now(timezone.utc)
-        job.errors = errors + [str(e)]
-        raise
+        job_status = "failed"
+        job_completed_at = datetime.now(timezone.utc)
+        errors.append(str(e))
+        pets_extracted = 0
     finally:
-        session.commit()
-        session.close()
+        # CRITICAL FIX: Update job using query, not ORM object
+        # This avoids "not bound to a Session" errors
+        try:
+            session.query(CrawlJob).filter(CrawlJob.id == job_id).update({
+                "status": job_status,
+                "completed_at": job_completed_at,
+                "pets_extracted": pets_extracted,
+                "errors": errors,
+            })
+            session.commit()
+        except Exception as e:
+            logger.error("Failed to update job status", error=str(e))
+        finally:
+            session.close()
 
     summary = {
-        "job_id": str(job.id),
+        "job_id": str(job_id),
         "shelter": shelter.name,
-        "status": job.status,
-        "pages_crawled": job.pages_crawled,
-        "pets_extracted": job.pets_extracted,
-        "errors": job.errors,
+        "status": job_status,
+        "pages_crawled": len(pages) if 'pages' in locals() else 0,
+        "pets_extracted": pets_extracted,
+        "errors": errors,
     }
     logger.info("Pipeline complete", **summary)
     return summary
