@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  # ── PostgreSQL + pgvector ───────────────────────────────────────────────
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: pet-adoption-db
+    environment:
+      POSTGRES_DB: pet_adoption
+      POSTGRES_USER: petadmin
+      POSTGRES_PASSWORD: changeme
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U petadmin -d pet_adoption"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
