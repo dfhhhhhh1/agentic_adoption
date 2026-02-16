@@ -45,6 +45,8 @@ class Shelter(Base):
     website_url = Column(String(1024), nullable=False, unique=True)
     location = Column(String(512))
     contact_info = Column(String(512))
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc),
                         onupdate=lambda: datetime.now(timezone.utc))
@@ -60,6 +62,9 @@ class Pet(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     shelter_id = Column(UUID(as_uuid=True), ForeignKey("shelters.id"), nullable=False)
+
+    # External ID from source (e.g. "CMHS-A-46003")
+    external_id = Column(String(255), nullable=True, index=True)
 
     # Core identity
     name = Column(String(255), nullable=False)
@@ -87,11 +92,18 @@ class Pet(Base):
     listing_url = Column(String(1024), default="")
     image_urls = Column(ARRAY(String), default=[])
 
+    # Image path for local/frontend images (e.g. "/images/CMHS-A-46003.jpeg")
+    image_path = Column(String(1024), nullable=True)
+
+    # Intake / source info
+    intake_date_str = Column(String(50), nullable=True)
+
     # Vector embedding of the combined text profile
     embedding = Column(Vector(768))  # dimension matches nomic-embed-text / MiniLM
 
     # Metadata
-    raw_extracted_json = Column(JSONB)  # store the raw LLM output for debugging
+    raw_extracted_json = Column(JSONB)  # store the raw LLM output or source JSON for debugging
+    source = Column(String(50), default="crawl")  # "crawl", "json", "manual"
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc),
                         onupdate=lambda: datetime.now(timezone.utc))

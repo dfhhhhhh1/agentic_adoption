@@ -123,20 +123,16 @@ def _pet_orm_to_schema(pet: Pet) -> PetSchema:
         shelter_contact=pet.shelter.contact_info if pet.shelter else None,
         listing_url=pet.listing_url or "",
         image_urls=pet.image_urls or [],
+        image_path=pet.image_path,
+        external_id=pet.external_id,
+        intake_date=pet.intake_date_str,
     )
 
 
 # ── Core Matching Logic ──────────────────────────────────────────────────────
 
 def match_pets(query: MatchQuery) -> MatchResponse:
-    """Run the full RAG matching pipeline.
-
-    Steps:
-      1. Embed the user query.
-      2. Vector search for top-K candidates.
-      3. Send candidates to LLM for ReAct reasoning.
-      4. Return ranked, explained results.
-    """
+    """Run the full RAG matching pipeline."""
     settings = get_settings()
     embedder = get_embedder()
     session_factory = get_session_factory()
@@ -152,7 +148,7 @@ def match_pets(query: MatchQuery) -> MatchResponse:
         species_filter = query.species_filter.value if query.species_filter else None
         candidates = pet_repo.vector_search(
             query_embedding=query_embedding,
-            top_k=query.max_results * 2,  # Retrieve extra for LLM to filter
+            top_k=query.max_results * 2,
             species_filter=species_filter,
         )
 
@@ -189,7 +185,6 @@ def match_pets(query: MatchQuery) -> MatchResponse:
             llm_response, pet_objects, similarity_scores
         )
 
-        # Limit to requested max
         results = results[:query.max_results]
 
         reasoning_summary = None
@@ -244,7 +239,6 @@ def _parse_llm_match_response(
 
     ranked = llm_response.get("ranked_pets", [])
     if not ranked:
-        # Fallback: return all candidates ranked by vector similarity
         logger.info("No LLM ranking available, falling back to vector similarity order")
         for i, pet in enumerate(pet_objects):
             results.append(MatchResult(
@@ -258,7 +252,6 @@ def _parse_llm_match_response(
         idx = entry.get("pet_index", -1)
         if 0 <= idx < len(pet_objects):
             pet = pet_objects[idx]
-            # Blend LLM confidence with vector similarity
             llm_score = float(entry.get("score", 0.5))
             vec_score = similarity_scores.get(idx, 0.0)
             blended_score = 0.6 * llm_score + 0.4 * vec_score

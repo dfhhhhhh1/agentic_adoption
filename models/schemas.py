@@ -21,8 +21,8 @@ class Species(str, Enum):
     CAT = "cat"
     RABBIT = "rabbit"
     BIRD = "bird"
-    SMALL_ANIMAL = "small_animal"  # hamster, guinea pig, etc.
-    REPTILE = "reptile"
+    SMALL_ANIMAL = "small_animal"  # hamster, guinea pig, ferret, etc.
+    REPTILE = "reptile"           # turtle, snake, lizard, etc.
     OTHER = "other"
 
 
@@ -78,10 +78,15 @@ class PetSchema(BaseModel):
     adoption_fee: Optional[float] = Field(None, description="Fee in USD if listed")
     is_neutered: Optional[bool] = Field(None)
     shelter_name: str = Field("Unknown")
-    shelter_location: Optional[str] = Field(None, description="City/state or address")
+    shelter_location: Optional[str] = Field(None, description="City/state or lat,long")
     shelter_contact: Optional[str] = Field(None, description="Phone or email")
     listing_url: str = Field("", description="Direct URL to the pet's listing page")
     image_urls: list[str] = Field(default_factory=list, description="URLs to pet photos")
+    image_path: Optional[str] = Field(None, description="Local image path for frontend")
+
+    # Source tracking
+    external_id: Optional[str] = Field(None, description="ID from the source system (e.g. CMHS-A-46003)")
+    intake_date: Optional[str] = Field(None, description="Date the pet was taken in by the shelter")
 
 
 class PetListingBatch(BaseModel):
@@ -148,3 +153,20 @@ class CrawlJobResponse(BaseModel):
     errors: list[str] = Field(default_factory=list)
     started_at: Optional[datetime] = None
     completed_at: Optional[datetime] = None
+
+
+# ── JSON Import Models ────────────────────────────────────────────────────────
+
+class JsonImportRequest(BaseModel):
+    """Request to import pets from a JSON file."""
+    file_path: str = Field(..., description="Path to the JSON file on the server")
+    generate_embeddings: bool = Field(False, description="Generate vector embeddings after import")
+    images_base_path: str = Field("/images", description="Base path prefix for image files")
+
+
+class JsonImportResponse(BaseModel):
+    """Response after a JSON import."""
+    pets_loaded: int
+    pets_skipped: int
+    shelters_created: int
+    errors: list[str] = Field(default_factory=list)

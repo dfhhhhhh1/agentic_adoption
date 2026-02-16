@@ -43,15 +43,15 @@ class PetRepository:
 
         # Map schema fields to ORM
         pet.name = pet_data.name
-        pet.species = pet_data.species.value
+        pet.species = pet_data.species.value if hasattr(pet_data.species, 'value') else pet_data.species
         pet.breed = pet_data.breed
         pet.age_text = pet_data.age_text
         pet.age_months = pet_data.age_months
-        pet.sex = pet_data.sex.value
-        pet.size = pet_data.size.value
+        pet.sex = pet_data.sex.value if hasattr(pet_data.sex, 'value') else pet_data.sex
+        pet.size = pet_data.size.value if hasattr(pet_data.size, 'value') else pet_data.size
         pet.weight_lbs = pet_data.weight_lbs
         pet.color = pet_data.color
-        pet.energy_level = pet_data.energy_level.value
+        pet.energy_level = pet_data.energy_level.value if hasattr(pet_data.energy_level, 'value') else pet_data.energy_level
         pet.good_with_dogs = pet_data.good_with_dogs
         pet.good_with_cats = pet_data.good_with_cats
         pet.good_with_children = pet_data.good_with_children
@@ -62,6 +62,14 @@ class PetRepository:
         pet.is_neutered = pet_data.is_neutered
         pet.listing_url = pet_data.listing_url
         pet.image_urls = pet_data.image_urls
+
+        # New fields
+        if pet_data.image_path is not None:
+            pet.image_path = pet_data.image_path
+        if pet_data.external_id is not None:
+            pet.external_id = pet_data.external_id
+        if pet_data.intake_date is not None:
+            pet.intake_date_str = pet_data.intake_date
 
         if embedding is not None:
             pet.embedding = embedding
@@ -88,6 +96,14 @@ class PetRepository:
     def get_by_id(self, pet_id: uuid.UUID) -> Pet | None:
         return self.session.get(Pet, pet_id)
 
+    def get_by_external_id(self, external_id: str) -> Pet | None:
+        """Find a pet by its source-system ID (e.g. CMHS-A-46003)."""
+        return (
+            self.session.query(Pet)
+            .filter(Pet.external_id == external_id)
+            .first()
+        )
+
     def list_pets(self, species: str | None = None, limit: int = 50,
                   offset: int = 0) -> list[Pet]:
         q = self.session.query(Pet)
@@ -103,12 +119,7 @@ class PetRepository:
         top_k: int = 10,
         species_filter: str | None = None,
     ) -> list[tuple[Pet, float]]:
-        """Find nearest pets by cosine similarity.
-
-        Returns list of (Pet, similarity_score) tuples, ordered by relevance.
-        """
-        # pgvector cosine distance operator: <=>
-        # cosine_distance = 1 - cosine_similarity, so we convert back
+        """Find nearest pets by cosine similarity."""
         distance_expr = Pet.embedding.cosine_distance(query_embedding)
         similarity_expr = (1 - distance_expr).label("similarity")
 

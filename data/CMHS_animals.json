@@ -1,0 +1,674 @@
+[
+  {
+    "id": "CMHS-A-46003",
+    "name": "Rufus",
+    "type": "Dog",
+    "breed": "Mixed Breed (Medium) / Terrier, American Pit Bull",
+    "sex": "Male",
+    "weight_lbs": 60,
+    "age": {
+      "years": 4,
+      "months": 1
+    },
+    "location": {
+      "name": "Central Missouri Humane Society",
+      "lat": 38.976475,
+      "long": -92.328724
+    },
+    "adoption_fee": 0,
+    "intake_date": "11/1/2022",
+    "description": "Rufus is a high energy dog who is looking for a new home where he can get lots of play time and exercise! He gets along great with his foster brothers and loves to wrestle, play tug and do zoomies in the yard with his buddies. He could definitely live as an only dog, but would love a home with another active dog who could help burn off some of his energy! Rufus has had successful interactions with older children, but his energy level and love of face kisses might be overwhelming for little ones or kids who aren't comfortable with big, goofy dogs. Roofie is a smart boy who knows all of the basic commands. He has a bit of anxiety and is working hard to learn things like calmly leaving his crate after being left alone and not jumping on people. He gets better and better every day and would benefit from continued training in his new home to help him with the adjustment. His active mind and athletic ability would make him an awesome candidate for activities like agility training. This handsome doofus is such a sweetie and loves attention. He's a big boy, but he wants to be a lap dog, and he spends every night curled up in bed as close as he can to his foster mom. Rufus has been diagnosed with a congenital defect called pulmonic stenosis (PS). PS is a condition in which the pulmonic valve is abnormally formed and creating an obstruction of blood flow from the right heart to the lungs. This then causes the right heart to have to work harder to push blood to the lungs, which in turn causes enlargement and thickening of the right heart. Fortunately, Rufus has had a successful surgery for this condition. It is recommended he have yearly follow up visits to monitor his heart.",
+    "image_path": "/images/CMHS-A-46003.jpeg"
+  },
+  {
+    "id": "CMHS-A-61882",
+    "name": "Glizzy",
+    "type": "Dog",
+    "breed": "Terrier, Pit Bull / Mixed Breed (Medium)",
+    "sex": "Female",
+    "weight_lbs": 53,
+    "age": {
+      "years": 3,
+      "months": 8
+    },
+    "location": {
+      "name": "Central Missouri Humane Society",
+      "lat": 38.976475,
+      "long": -92.328724
+    },
+    "adoption_fee": 50,
+    "intake_date": "1/7/2025",
+    "description": "Glizzy—affectionately known as “GG”—is a sweet, loyal girl who has quickly stolen the hearts of everyone who’s met her. Her favorite activities? Snuggling on the couch, following her nose on walks, and showing off how smart she is (treats definitely help!). She knows sit, down, leave it, and even waits for an “OK” before diving into her meals. She’s house-trained, kennel-trained, and loves having a cozy spot to nap while you work or relax. Glizzy is an absolute people-lover. She greets visitors like old friends and enjoys being part of the action without being overwhelming. Her perfect day includes a short walk, a squeaky toy or two, and curling up beside you for a nap. Because of her strong prey drive and reactivity toward other animals, Glizzy would do best as the only pet in the home. She’s also best suited to a home without babies or toddlers, but older kids and adults will adore her sweet and affectionate nature. Glizzy does have a serious heart condition called severe subaortic stenosis, which unfortunately means her life expectancy is shorter than average (most dogs with her condition don’t live beyond age 3). She takes medication to help her heart and is doing great in her foster home, but her adopter will need to continue her care and understand her limitations.",
+    "image_path": "/images/CMHS-A-61882.jpg"
+  },
+  {
+    "id": "CMHS-A-64682",
+    "name": "Rowan Whitethorn",
+    "type": "Dog",
+    "breed": "Mixed Breed (Medium)",
+    "sex": "Male",
+    "weight_lbs": 47,
+    "age": {
+      "years": 5,
+      "months": 11
+    },
+    "location": {
+      "name": "Central Missouri Humane Society",
+      "lat": 38.976475,
+      "long": -92.328724
+    },
+    "adoption_fee": 100,
+    "intake_date": "8/4/2025",
+    "description": "Meet Rowan! He's 1 of 15 dogs that came into the shelter in early August as part of a neglect case. Rowan was starved and under-socialized, but through the care of staff and volunteers at CMHS, he is gaining confidence and trust in people again. Three square meals a day doesn’t hurt either! Rowan is very food-motivated and will happily sit for a treat. He has also been going out on day trips with volunteers to see the world and make friends. His foster says that Rowan was initially a bit skittish - very alert and curious with new noises. Thankfully, this only lasted a few hours at home and then he quickly settled in. He loves attention and belly rubs and warms up quickly to people. So far he hasn’t really wanted to play with toys or balls. He is content to be with his people, get lots of pets and treats and enjoys rolling in the grass. He has had no accidents in the house and seems to be a quick learner. He has learned to sit, lay down and is doing great with walking on leash. He is a sweet boy who will be a wonderful addition to someone’s home. Rowan is being treated for a skin infection while in shelter care. Ongoing monitoring for his skin will be needed with adopter's veterinarian, which could include further diagnostics and treatment. Underlying environmental or food allergies could be a cause and could require ongoing management. Rowan has severe dental wear, particularly over the front incisors, and will need a dental with adopter's veterinarian if it hasn't been completed while in shelter care.",
+    "image_path": "/images/CMHS-A-64682.jpeg"
+  },
+  {
+    "id": "CMHS-A-64232",
+    "name": "Banx (Bernie)",
+    "type": "Dog",
+    "breed": "Mixed Breed (Large)",
+    "sex": "Male",
+    "weight_lbs": 88,
+    "age": {
+      "years": 1,
+      "months": 5
+    },
+    "location": {
+      "name": "Central Missouri Humane Society",
+      "lat": 38.976475,
+      "long": -92.328724
+    },
+    "adoption_fee": 0,
+    "intake_date": "10/16/2025",
+    "description": "Banx is a big boy with BIG love to give! He loves toys, basking in the sun and fresh air, treats, and fireplace ambiance with smooth jazz on YouTube. He is eager to please and very treat motivated, so training has been a blast! He knows sit, lay down, and paw, and he’s working on settle, watch me, and place. Banx loves other dogs and wants to play with them, but because he’s a baby he hasn’t been taught how to interact in the most appropriate of ways. He tends to climb on top of smaller dogs, and not read cues from other dogs when they finished playing. He has gotten better thanks to his very patient foster brother! Banx also loves people! He is working on polite greetings, because once again, he’s a baby and doesn’t understand how big he is! He can get jumpy and mouthy when over excited, but he is easily redirected with treats or toys. He is fully house trained and he LOVES to go lay outside and go for walks! He is not crate trained, but so far he has been totally fine when left out, and will go into his foster brothers crate to sleep with the door open! Banx will thrive in an environment where he is handled with calm confidence and guided into the best boy he can be!",
+    "image_path": "/images/CMHS-A-64232.jpg"
+  },
+  {
+    "id": "CMHS-A-66430",
+    "name": "Wiggles",
+    "type": "Dog",
+    "breed": "Mixed Breed (Medium)",
+    "sex": "Male",
+    "weight_lbs": 9.13,
+    "age": {
+      "years": 0,
+      "months": 2
+    },
+    "location": {
+      "name": "Central Missouri Humane Society",
+      "lat": 38.976475,
+      "long": -92.328724
+    },
+    "adoption_fee": 150,
+    "intake_date": "12/17/2025",
+    "description": "This zesty little pup has been moving & grooving since the day he was born. As the largest pup in the litter, Wiggles is a natural born leader. But he doesn't know where he is leading you to, so don't ask. Wiggles hopes to find an active new home with an energetic family who loves to play! Wiggles & his siblings are working on potty training, but with all of the freezing cold temps, they haven't gotten much experience in the great outdoors. The pups are all sleeping through the night in their kennels like little pros & can't wait to keep learning about all of the things in their forever homes!",
+    "image_path": "/images/CMHS-A-66430.jpeg"
+  },
+  {
+    "id": "CMHS-A-62609",
+    "name": "Harriet",
+    "type": "Cat",
+    "breed": "Domestic Longhair / Domestic Medium Hair",
+    "sex": "Female",
+    "weight_lbs": 8,
+    "age": {
+      "years": 7,
+      "months": 2
+    },
+    "location": {
+      "name": "Central Missouri Humane Society",
+      "lat": 38.976475,
+      "long": -92.328724
+    },
+    "adoption_fee": 75,
+    "intake_date": "3/11/2025",
+    "description": "Harriet is a calm and rather reserved adult cat. She is declawed in front but enjoys the activity of “clawing” her cardboard scratching pad and my wicker basket chest. She is not a cuddly or demonstrative cat; she loves human company but prefers to supervise from her favorite chair across the room. Once she gets to know you she will hop up on the bed or chair to be petted but stays only a few minutes. She loves being brushed with her slicker brush, even her belly. She is fine with being handled (paws included) although she prefers you to leave her tail alone. She loves having a hidey hole to hang out in when she is not supervising her humans, and she also enjoys having a window perch; she is fascinated by squirrels and toads. She can be a bit prickly at times and most emphatically does not enjoy being skritched; long smooth petting only, please! She would not do well with children. She is tolerant of dogs but does not actively engage with them and will hiss/swat if the dog nose gets into her personal space. She has had no opportunity to interact with other cats in foster care though she did originate from a 2-cat household. She had a bladder stone when she arrived at CMHS that caused her to have some litter box issues. The stone was removed surgically and she is on a special diet, but is at risk for stone reoccurrence. In the several months she has been in foster care she has had zero litter box issues. She really likes her hairball treats and has had no hairball issues, either. Her feet do not appear to bother her at all. If you are looking for a very chill adult cat, give Harriet a look!",
+    "image_path": "/images/CMHS-A-62609.jpg"
+  },
+  {
+    "id": "CMHS-A-67000",
+    "name": "Oliver",
+    "type": "Cat",
+    "breed": "Domestic Longhair",
+    "sex": "Male",
+    "weight_lbs": 1.7,
+    "age": {
+      "years": 0,
+      "months": 1
+    },
+    "location": {
+      "name": "Central Missouri Humane Society",
+      "lat": 38.976475,
+      "long": -92.328724
+    },
+    "adoption_fee": 150,
+    "intake_date": "2/6/2026",
+    "description": "",
+    "image_path": "/images/CMHS-A-67000.jpeg"
+  },
+  {
+    "id": "CMHS-A-56885",
+    "name": "Bon Bon",
+    "type": "Cat",
+    "breed": "Domestic Shorthair",
+    "sex": "Female",
+    "weight_lbs": 9.31,
+    "age": {
+      "years": 2,
+      "months": 3
+    },
+    "location": {
+      "name": "Central Missouri Humane Society",
+      "lat": 38.976475,
+      "long": -92.328724
+    },
+    "adoption_fee": 75,
+    "intake_date": "10/22/2024",
+    "description": "Bon Bon is a big sweetie who loves to get pets. She loves to chase other kitties and balls around the house. She enjoys catnip kickers and cardboard scratchers. Bon Bon will anxiously wait for her love each morning and will drool and make soft biscuits as soon as the loving starts. Bon Bon will drool up a storm and will take all the pets she can get. She still doesn’t enjoy getting picked up and is learning to not be scared of kisses. Bon Bon would do best in a home with another cat or one of her daughters (Truffle, Marzipan) and can get scared easily so would do best in a home without small children.",
+    "image_path": "/images/CMHS-A-56885.jpg"
+  },
+  {
+    "id": "CMHS-A-64324",
+    "name": "Miro",
+    "type": "Cat",
+    "breed": "Domestic Shorthair",
+    "sex": "Male",
+    "weight_lbs": 8.84,
+    "age": {
+      "years": 0,
+      "months": 10
+    },
+    "location": {
+      "name": "Central Missouri Humane Society",
+      "lat": 38.976475,
+      "long": -92.328724
+    },
+    "adoption_fee": 150,
+    "intake_date": "7/5/2025",
+    "description": "(TL;DR - Skittish/shy/anxious, a true 'love me from a distance' cat, but very sweet and cuddly once he trusts you!) Miro is a very shy and cautious kitty. Having grown up in a difficult situation, he's a little weary of humans but tends to warm up when allowed the time to do so. Miro is the last of his litter to begin warming up and therefore he's also going to need a quiet, understanding, and steady home to reinforce those positive human interactions. When he's relaxed and more confident, Miro likes to talk and cuddle. He's a lap cat who enjoys giving little love nips and purring his heart out. He enjoys treats, back & neck scratches, and adores playing with his toys and other kitties. He's very curious and tends to approach people when he's ready to be given attention. Miro is excellent at using the litter box but isn't too fond of being picked up for an extended period of time. Miro appears happiest living with other cats and does not seem to want to be an only cat. The ideal home for Miro will have at least one other cat, be child-free and calm. A low-energy household with patient humans who are willing to give him time to adjust while reinforcing positive human interactions is the best-case scenario for ensuring Miro comes fully out of his shell.",
+    "image_path": "/images/CMHS-A-64324.jpg"
+  },
+  {
+    "id": "CMHS-A-65537",
+    "name": "Anastasia",
+    "type": "Cat",
+    "breed": "Domestic Shorthair",
+    "sex": "Female",
+    "weight_lbs": 7.7,
+    "age": {
+      "years": 0,
+      "months": 11
+    },
+    "location": {
+      "name": "Central Missouri Humane Society",
+      "lat": 38.976475,
+      "long": -92.328724
+    },
+    "adoption_fee": 75,
+    "intake_date": "10/10/2025",
+    "description": "Are you looking for a smart, mischievious, and loving girl to call yours? Anastasia is your girl! Her and and her sister, Drizella, were initially found as strays at a gas station. These poor girls had a rough start with humans, including getting rocks thrown at them. Although you will certainly need to earn her trust, I can assure you, it will make it that much more rewarding when you do! She can typically be coaxed if Churu is involved. Once she warms up, Anastasia can be quite the social butterfly. She has the sweetest little meow and will hold small conversations, so hopefully you enjoy meowing with your girl from time to time. She's more of a socializer than a cuddler, and loves a good pet! Anastasia is very bonded to her sister, and does great with other cats as well! Since she came in as a stray, she has been slowly learning what it looks like to play. So far, she most enjoys the cat laser and cat tunnel, and is in the process of figuring out wand toys. She does have quite the knack for finding her way in closets, and she loves hiding in clothes!",
+    "image_path": "/images/CMHS-A-65537.jpg"
+  },
+  {
+    "id": "CMHS-A-64973",
+    "name": "Romaine",
+    "type": "Turtle",
+    "breed": "Unspecified",
+    "sex": "Unknown",
+    "weight_lbs": 1.25,
+    "age": {
+      "years": 2,
+      "months": 5
+    },
+    "location": {
+      "name": "Central Missouri Humane Society",
+      "lat": 38.976475,
+      "long": -92.328724
+    },
+    "adoption_fee": 50,
+    "intake_date": "8/28/2025",
+    "description": "Romaine is a sweet aquatic Slider turtle ready to find a new home. Their exact age is unknown, but they still have many years ahead and deserve a safe, permanent setup where they can thrive. Romaine came to us after being left behind when a family member moved. They’ve been living in a 55-gallon tank with filtration and basking access, and have proven to be a friendly, low-maintenance pet. They enjoy swimming, basking under a warm light, and being gently handled a couple of times a week. They’re also a fan of leafy greens and will happily accept the occasional small fish snack!",
+    "image_path": "/images/CMHS-A-64973.jpg"
+  },
+  {
+    "id": "CMHS-A-66820",
+    "name": "Bun",
+    "type": "Rabbit",
+    "breed": "American",
+    "sex": "Male",
+    "weight_lbs": 8.4,
+    "age": {
+      "years": 3,
+      "months": 0
+    },
+    "location": {
+      "name": "Central Missouri Humane Society",
+      "lat": 38.976475,
+      "long": -92.328724
+    },
+    "adoption_fee": 25,
+    "intake_date": "1/29/2026",
+    "description": "Bun is a sweet, indoor rabbit around 3 years old who loves a calm and cozy home. He’s fully litterbox trained, enjoys gentle pets, and loves hopping around and exploring his space. Bun gets along well with cats, though he’s never been around dogs, and he’s not a fan of being held—he prefers to enjoy affection while staying on the ground. He’s happiest indoors in his enclosure, eating his pellets, lounging, and enjoying quiet companionship. Bun would thrive in a home where he can relax, be petted on his terms, and hop freely in a safe, indoor environment. Ideal Home: Calm, patient adults or older children, a cat-friendly household, and plenty of room to explore safely indoors.",
+    "image_path": "/images/CMHS-A-66820.jpeg"
+  },
+  {
+    "id": "CMHS-A-66570",
+    "name": "Mocha",
+    "type": "Guinea Pig",
+    "breed": "American",
+    "sex": "Male",
+    "weight_lbs": 2,
+    "age": {
+      "years": 0,
+      "months": 7
+    },
+    "location": {
+      "name": "Central Missouri Humane Society",
+      "lat": 38.976475,
+      "long": -92.328724
+    },
+    "adoption_fee": 20,
+    "intake_date": "12/30/2025",
+    "description": "Mocha is very sweet but is the shyest in the group. He enjoys eating almost everything, he likes Romaine lettuce, parsley, Bell pepper, cucumber, and kale. When a new toy or Heidi is introduced he loves to examine and explore it. He will take food from your hand but might be a little hesitant at first but the more and more you do it the more and more he warms up to you. He and his buddies get along and love to explore their enclosure together.",
+    "image_path": "/images/CMHS-A-66570.jpeg"
+  },
+  {
+    "id": "CMHS-A-66978",
+    "name": "Brutus (and Cassius)",
+    "type": "Ferret",
+    "breed": "Unspecified",
+    "sex": "Male",
+    "weight_lbs": 2.38,
+    "age": {
+      "years": 0,
+      "months": 1
+    },
+    "location": {
+      "name": "Central Missouri Humane Society",
+      "lat": 38.976475,
+      "long": -92.328724
+    },
+    "adoption_fee": 75,
+    "intake_date": "2/4/2026",
+    "description": "Brutus and Cassius are two cuddly energetic chaotic ferrets who love to play and sleep. They will follow you around and want to know what you’re doing and how they can ‘help’. They love to cuddle with each other and play fight, especially in some tunnels or a dig box. They love to sleep under things that are dark such as the cough of you let them but always come running when you squeak their toys, just to stash them away. They don’t bit feet or steal socks but all their toys will disappear in their favorite hiding spot.",
+    "image_path": "/images/CMHS-A-66978.jpeg"
+  },
+  {
+    "id": "CMHS-A-66979",
+    "name": "Cassius (and Brutus)",
+    "type": "Ferret",
+    "breed": "Unspecified",
+    "sex": "Male",
+    "weight_lbs": 0,
+    "age": {
+      "years": 0,
+      "months": 0
+    },
+    "location": {
+      "name": "Central Missouri Humane Society",
+      "lat": 38.976475,
+      "long": -92.328724
+    },
+    "adoption_fee": 75,
+    "intake_date": "2/4/2026",
+    "description": "Brutus and Cassius are two cuddly energetic chaotic ferrets who love to play and sleep. They will follow you around and want to know what you’re doing and how they can ‘help’. They love to cuddle with each other and play fight, especially in some tunnels or a dig box. They love to sleep under things that are dark such as the cough of you let them but always come running when you squeak their toys, just to stash them away. They don’t bit feet or steal socks but all their toys will disappear in their favorite hiding spot.",
+    "image_path": "/images/CMHS-A-66979.jpeg"
+  },
+  {
+    "id": "CMHS-A-67058",
+    "name": "Oreo (and Reeses)",
+    "type": "Guinea Pig",
+    "breed": "Unspecified",
+    "sex": "Male",
+    "weight_lbs": 2.75,
+    "age": {
+      "years": 0,
+      "months": 9
+    },
+    "location": {
+      "name": "Central Missouri Humane Society",
+      "lat": 38.976475,
+      "long": -92.328724
+    },
+    "adoption_fee": 0,
+    "intake_date": "2/10/2026",
+    "description": "Bonded to Reeses.",
+    "image_path": "/images/CMHS-A-67058.jpg"
+  },
+  {
+    "id": "CMHS-A-67059",
+    "name": "Reeses (and Oreo)",
+    "type": "Guinea Pig",
+    "breed": "Unspecified",
+    "sex": "Male",
+    "weight_lbs": 1.93,
+    "age": {
+      "years": 0,
+      "months": 9
+    },
+    "location": {
+      "name": "Central Missouri Humane Society",
+      "lat": 38.976475,
+      "long": -92.328724
+    },
+    "adoption_fee": 20,
+    "intake_date": "2/10/2026",
+    "description": "Bonded to Oreo",
+    "image_path": "/images/CMHS-A-67059.jpeg"
+  },
+  {
+    "id": "CMHS-A-66572",
+    "name": "Latte",
+    "type": "Guinea Pig",
+    "breed": "American",
+    "sex": "Male",
+    "weight_lbs": 2,
+    "age": {
+      "years": 0,
+      "months": 7
+    },
+    "location": {
+      "name": "Central Missouri Humane Society",
+      "lat": 38.976475,
+      "long": -92.328724
+    },
+    "adoption_fee": 20,
+    "intake_date": "12/30/2025",
+    "description": "Latte is super sweet but might be a little unsure at first but the more you spend time with him the more he gets excited to see you. He likes cloth tunnels and Heidi's. He loves to eat and sometimes Hogs all the food. He enjoys taking naps throughout the day and will take food from your hand but he does not like being handled. He and his buddies get along and love to explore there enclosure together.",
+    "image_path": "/images/CMHS-A-66572.jpeg"
+  },
+  {
+    "id": "A685068",
+    "name": "Caiden",
+    "type": "Dog",
+    "breed": "Pit Bull Terrier",
+    "sex": "Male",
+    "weight_lbs": 34.6,
+    "age": {
+      "years": 6,
+      "months": 0
+    },
+    "location": {
+      "name": "Humane Society of Missouri - St. Louis City",
+      "lat": 38.626144,
+      "long": -90.276142
+    },
+    "adoption_fee": 100,
+    "intake_date": "01/05/2026",
+    "description": "Black and White color.",
+    "image_path": "/images/A685068.jpeg"
+  },
+  {
+    "id": "A734980",
+    "name": "Coco",
+    "type": "Dog",
+    "breed": "Pit Bull Terrier",
+    "sex": "Female",
+    "weight_lbs": 54.2,
+    "age": {
+      "years": 2,
+      "months": 7
+    },
+    "location": {
+      "name": "Humane Society of Missouri - St. Louis City",
+      "lat": 38.626144,
+      "long": -90.276142
+    },
+    "adoption_fee": 100,
+    "intake_date": "12/29/2025",
+    "description": "White and Brown color.",
+    "image_path": "/images/A734980.jpeg"
+  },
+  {
+    "id": "A746591",
+    "name": "Scallop",
+    "type": "Dog",
+    "breed": "Beagle",
+    "sex": "Female",
+    "weight_lbs": 33.5,
+    "age": {
+      "years": 1,
+      "months": 1
+    },
+    "location": {
+      "name": "Humane Society of Missouri - St. Louis City",
+      "lat": 38.626144,
+      "long": -90.276142
+    },
+    "adoption_fee": 100,
+    "intake_date": "Unknown",
+    "description": "Spayed, in foster care.",
+    "image_path": "/images/A746591.jpeg"
+  },
+  {
+    "id": "A755074",
+    "name": "Mia",
+    "type": "Cat",
+    "breed": "Domestic Shorthair",
+    "sex": "Female",
+    "weight_lbs": 11.56,
+    "age": {
+      "years": 5,
+      "months": 0
+    },
+    "location": {
+      "name": "Humane Society of Missouri - Maryland Heights",
+      "lat": 38.700835, 
+      "long": -90.428560
+    },
+    "adoption_fee": 100,
+    "intake_date": "01/12/2026",
+    "description": "Brown torbi and white.",
+    "image_path": "/images/A755074.jpeg"
+  },
+  {
+    "id": "A755742",
+    "name": "Skittles",
+    "type": "Cat",
+    "breed": "Domestic Shorthair",
+    "sex": "Female",
+    "weight_lbs": 13.12,
+    "age": {
+      "years": 4,
+      "months": 0
+    },
+    "location": {
+      "name": "Humane Society of Missouri - Maryland Heights",
+      "lat": 38.700835, 
+      "long": -90.428560
+    },
+    "adoption_fee": 100,
+    "intake_date": "01/30/2026",
+    "description": "Tortoiseshell, spayed.",
+    "image_path": "/images/"
+  },
+  {
+    "id": "A756087",
+    "name": "Scarlett",
+    "type": "Cat",
+    "breed": "Domestic Shorthair",
+    "sex": "Female",
+    "weight_lbs": 8.22,
+    "age": {
+      "years": 5,
+      "months": 0
+    },
+    "location": {
+      "name": "Humane Society of Missouri - St. Louis City",
+      "lat": 38.626144,
+      "long": -90.276142
+    },
+    "adoption_fee": 100,
+    "intake_date": "02/11/2026",
+    "description": "Brown Tabby, spayed.",
+    "image_path": "/images/A756087.jpeg"
+  },
+  {
+    "id": "A755640",
+    "name": "Bonnie",
+    "type": "Rabbit",
+    "breed": "Shorthaired",
+    "sex": "Female",
+    "weight_lbs": 0.48,
+    "age": {
+      "years": 1,
+      "months": 1
+    },
+    "location": {
+      "name": "Humane Society of Missouri - St. Louis City",
+      "lat": 38.626144,
+      "long": -90.276142
+    },
+    "adoption_fee": 15,
+    "intake_date": "01/28/2026",
+    "description": "White and Gray",
+    "image_path": "/images/A755640.jpeg"
+  },
+  {
+    "id": "A755648",
+    "name": "Bowie",
+    "type": "Rabbit",
+    "breed": "Shorthaired",
+    "sex": "Male",
+    "weight_lbs": 2.18,
+    "age": {
+      "years": 1,
+      "months": 1
+    },
+    "location": {
+      "name": "Humane Society of Missouri - St. Louis City",
+      "lat": 38.626144,
+      "long": -90.276142
+    },
+    "adoption_fee": 15,
+    "intake_date": "01/28/2026",
+    "description": "Neutered, white and brown.",
+    "image_path": "/images/A755648.jpeg"
+  },
+  {
+    "id": "A755659",
+    "name": "Borscht",
+    "type": "Rabbit",
+    "breed": "American Chinchilla and Mix",
+    "sex": "Male",
+    "weight_lbs": 6.16,
+    "age": {
+      "years": 2,
+      "months": 0
+    },
+    "location": {
+      "name": "Humane Society of Missouri - Maryland Heights",
+      "lat": 38.700835, 
+      "long": -90.428560
+    },
+    "adoption_fee": 15,
+    "intake_date": "01/28/1016",
+    "description": "Agouti color.",
+    "image_path": "/images/A755659.jpeg"
+  },
+  {
+    "id": "A755697",
+    "name": "Buddy",
+    "type": "Rabbit",
+    "breed": "Shorthaired",
+    "sex": "Male",
+    "weight_lbs": 6.66,
+    "age": {
+      "years": 2,
+      "months": 7
+    },
+    "location": {
+      "name": "Humane Society of Missouri - St. Louis City",
+      "lat": 38.626144,
+      "long": -90.276142
+    },
+    "adoption_fee": 15,
+    "intake_date": "01/30/2026",
+    "description": "Neutered, Black and Tan.",
+    "image_path": "/images/A755697.jpeg"
+  },
+  {
+    "id": "30284",
+    "name": "Busby",
+    "type": "Dog",
+    "breed": "Mixed Breed (Medium)",
+    "sex": "Male",
+    "weight_lbs": 29,
+    "age": {
+      "years": 0,
+      "months": 5
+    },
+    "location": {
+      "name": "Jefferson City Animal Shelter",
+      "lat": 38.577937,
+      "long": -92.212283
+    },
+    "adoption_fee": 125,
+    "intake_date": "Unknown",
+    "description": "Name: Busby Age: 5-5.5 months old Breed: Mixed breed Gender: neuterd male Current Weight: 29 lbs Estimated weight when grown: 50-70 lbs House broke: Unknown Good with Dogs: Unknown Good with Cats: Unknown Good with Children: Unknown Heartworm Test: Too young to test Adoption Fee: $125.00 Misc. Information: Busby was brought to the shelter as a stray so little is known about him at this time. He has been a sweet boy who is really nervous here at the shelter. Let him come to you and do not back him into the corner of his kennel. Once out of the shelter envirnoment he may settle down more and not be so nervous. The shelter provides a 5-day health guarantee for adopted animals. This includes health conditions not present or known about by the shelter at the of adoption, which adopter becomes aware of within 5 days. Injuries or accidents that occur at the adopter's home are not covered. The shelter is not responsible for incurred costs from local veterinarians due to non-compliance. ALL adoptions are final! Animals can be returned to the shelter for any reason, however, there are NO refunds or exchanges.",
+    "image_path": "/images/30284.png"
+  },
+  {
+    "id": "A746545",
+    "name": "Zeus",
+    "type": "Dog",
+    "breed": "Treeing Walker Coonhound and Mix",
+    "sex": "Male",
+    "weight_lbs": 71,
+    "age": {
+      "years": 1,
+      "months": 0
+    },
+    "location": {
+      "name": "Humane Society of Missouri - Maryland Heights",
+      "lat": 38.700835,
+      "long": -90.428560
+    },
+    "adoption_fee": 100,
+    "intake_date": "02/06/2026",
+    "description": "Tricolor.",
+    "image_path": "/images/A746545.jpeg"
+  },
+  {
+    "id": "A747660",
+    "name": "Bruce",
+    "type": "Dog",
+    "breed": "American Pit Bull Terrier",
+    "sex": "Male",
+    "weight_lbs": 66.6,
+    "age": {
+      "years": 6,
+      "months": 0
+    },
+    "location": {
+      "name": "Humane Society of Missouri - Maryland Heights",
+      "lat": 38.700835,
+      "long": -90.428560
+    },
+    "adoption_fee": 100,
+    "intake_date": "01/08/2026",
+    "description": "Tan and White",
+    "image_path": "/images/A747660.jpeg"
+  },
+  {
+    "id": "",
+    "name": "",
+    "type": "",
+    "breed": "",
+    "sex": "",
+    "weight_lbs": ,
+    "age": {
+      "years": ,
+      "months": 
+    },
+    "location": {
+      "name": "Humane Society of Missouri - Maryland Heights",
+      "lat": 38.700835,
+      "long": -90.428560
+    },
+    "adoption_fee": ,
+    "intake_date": "",
+    "description": "",
+    "image_path": "/images/"
+  }
+]

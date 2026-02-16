@@ -1,14 +1,15 @@
 """FastAPI application — REST API for pet ingestion and matching.
 
 Endpoints:
-  POST /ingest       — Start a crawl + extraction job for a shelter
-  GET  /ingest/{id}  — Check job status
-  POST /match        — Find matching pets for an adopter query
-  GET  /pets         — List all pets (with optional filters)
-  GET  /pets/{id}    — Get a single pet by ID
-  GET  /shelters     — List registered shelters
-  GET  /stats        — Database statistics
-  GET  /health       — Health check
+  POST /ingest           — Start a crawl + extraction job for a shelter
+  GET  /ingest/{id}      — Check job status
+  POST /import/json      — Import pets from a JSON file
+  POST /match            — Find matching pets for an adopter query
+  GET  /pets             — List all pets (with optional filters)
+  GET  /pets/{id}        — Get a single pet by ID
+  GET  /shelters         — List registered shelters
+  GET  /stats            — Database statistics
+  GET  /health           — Health check
 """
 
 from __future__ import annotations
@@ -31,6 +32,8 @@ from models.schemas import (
     CrawlJobRequest,
     CrawlJobResponse,
     CrawlJobStatus,
+    JsonImportRequest,
+    JsonImportResponse,
     MatchQuery,
     MatchResponse,
     PetSchema,
@@ -61,7 +64,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Pet Adoption Platform API",
     description="Agentic AI-powered pet adoption matching engine",
-    version="0.1.0",
+    version="0.2.0",
     lifespan=lifespan,
 )
 
@@ -102,6 +105,10 @@ async def get_stats(session=Depends(get_db_session)):
         "total_pets": pet_repo.count(),
         "dogs": pet_repo.count("dog"),
         "cats": pet_repo.count("cat"),
+        "rabbits": pet_repo.count("rabbit"),
+        "small_animals": pet_repo.count("small_animal"),
+        "reptiles": pet_repo.count("reptile"),
+        "other": pet_repo.count("other"),
         "total_shelters": len(shelter_repo.list_all()),
     }
 
@@ -137,8 +144,6 @@ async def start_ingestion(
 
     job_id = str(job.id)
 
-    # Run pipeline in background — use a sync wrapper so Starlette's
-    # threadpool executor can run it without needing an existing event loop.
     def _run_sync():
         try:
             asyncio.run(
@@ -187,19 +192,146 @@ async def get_ingestion_status(job_id: str, session=Depends(get_db_session)):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+# JSON IMPORT ENDPOINT
+# ══════════════════════════════════════════════════════════════════════════════
+
+@app.post("/import/json", response_model=JsonImportResponse)
+async def import_from_json(
+    request: JsonImportRequest,
+    background_tasks: BackgroundTasks,
+    session=Depends(get_db_session),
+):
+    """Import pets from a JSON file into the database.
+
+    The JSON file should be an array of objects with fields like:
+    id, name, type, breed, sex, weight_lbs, age {years, months},
+    location {name, lat, long}, adoption_fee, intake_date, description, image_path.
+    """
+    import os
+    from pathlib import Path
+
+    filepath = Path(request.file_path)
+    if not filepath.exists():
+        raise HTTPException(status_code=404, detail=f"File not found: {request.file_path}")
+
+    try:
+        from scripts.load_json import load_json_file, convert_json_entry
+
+        raw_entries = load_json_file(str(filepath))
+        shelter_repo = ShelterRepository(session)
+        pet_repo = PetRepository(session)
+
+        pets_loaded = 0
+        pets_skipped = 0
+        shelters_created_set = set()
+        errors = []
+
+        for entry in raw_entries:
+            converted = convert_json_entry(entry, request.images_base_path)
+            if not converted:
+                pets_skipped += 1
+                continue
+
+            try:
+                sname = converted["shelter_name"]
+                location = entry.get("location", {})
+                shelter = shelter_repo.get_or_create(
+                    website_url=f"https://placeholder.local/{sname.lower().replace(' ', '-')}",
+                    name=sname,
+                    location=converted.get("shelter_location"),
+                )
+                if converted.get("shelter_lat") and converted.get("shelter_long"):
+                    shelter.latitude = converted["shelter_lat"]
+                    shelter.longitude = converted["shelter_long"]
+
+                shelters_created_set.add(sname)
+
+                pet_schema = PetSchema(
+                    name=converted["name"],
+                    species=converted["species"],
+                    breed=converted["breed"],
+                    age_text=converted["age_text"],
+                    age_months=converted["age_months"],
+                    sex=converted["sex"],
+                    size=converted["size"],
+                    weight_lbs=converted["weight_lbs"],
+                    color=converted["color"],
+                    energy_level=converted["energy_level"],
+                    good_with_dogs=converted["good_with_dogs"],
+                    good_with_cats=converted["good_with_cats"],
+                    good_with_children=converted["good_with_children"],
+                    house_trained=converted["house_trained"],
+                    special_needs=converted["special_needs"],
+                    personality_description=converted["personality_description"],
+                    adoption_fee=converted["adoption_fee"],
+                    is_neutered=converted["is_neutered"],
+                    shelter_name=converted["shelter_name"],
+                    shelter_location=converted["shelter_location"],
+                    listing_url=converted["listing_url"],
+                    image_urls=converted["image_urls"],
+                    image_path=converted.get("image_path"),
+                    external_id=converted.get("external_id"),
+                    intake_date=converted.get("intake_date"),
+                )
+
+                raw_json = {**converted, "species": converted["species"].value,
+                            "sex": converted["sex"].value, "size": converted["size"].value,
+                            "energy_level": converted["energy_level"].value}
+
+                pet = pet_repo.upsert_pet(
+                    pet_data=pet_schema,
+                    shelter_id=shelter.id,
+                    raw_json=raw_json,
+                )
+                pet.external_id = converted.get("external_id", "")
+                pet.intake_date_str = converted.get("intake_date", "")
+                pet.image_path = converted.get("image_path", "")
+                pet.source = "json"
+
+                pets_loaded += 1
+            except Exception as e:
+                errors.append(f"Failed to load {entry.get('name', '?')}: {str(e)}")
+                pets_skipped += 1
+
+        session.commit()
+
+        # Optionally generate embeddings in background
+        if request.generate_embeddings and pets_loaded > 0:
+            def _embed():
+                try:
+                    from ingestion.embeddings import get_embedder
+                    embedder = get_embedder()
+                    s = get_session_factory()()
+                    pets = s.query(Pet).filter(Pet.embedding.is_(None), Pet.source == "json").all()
+                    for p in pets:
+                        text = p.to_text_for_embedding()
+                        p.embedding = embedder.embed(text)
+                    s.commit()
+                    s.close()
+                except Exception as e:
+                    logger.error("Background embedding failed", error=str(e))
+
+            background_tasks.add_task(_embed)
+
+        return JsonImportResponse(
+            pets_loaded=pets_loaded,
+            pets_skipped=pets_skipped,
+            shelters_created=len(shelters_created_set),
+            errors=errors,
+        )
+
+    except Exception as e:
+        logger.error("JSON import failed", error=str(e))
+        raise HTTPException(status_code=500, detail=f"Import failed: {str(e)}")
+
+
+# ══════════════════════════════════════════════════════════════════════════════
 # STAGE 2: MATCHING / QUERY ENDPOINTS
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.post("/match", response_model=MatchResponse)
 async def find_matches(query: MatchQuery):
-    """Find matching pets based on adopter's lifestyle description.
-
-    This is the core Stage 2 endpoint. It:
-    1. Embeds the query using the configured embedding model.
-    2. Performs vector similarity search against all stored pets.
-    3. Sends top candidates to the LLM for ReAct reasoning.
-    4. Returns ranked results with personalised explanations.
-    """
+    """Find matching pets based on adopter's lifestyle description."""
     try:
         return match_pets(query)
     except Exception as e:
@@ -221,23 +353,7 @@ async def list_pets(
     pets = pet_repo.list_pets(species=species, limit=limit, offset=offset)
     return {
         "count": len(pets),
-        "pets": [
-            {
-                "id": str(p.id),
-                "name": p.name,
-                "species": p.species,
-                "breed": p.breed,
-                "age_text": p.age_text,
-                "sex": p.sex,
-                "size": p.size,
-                "energy_level": p.energy_level,
-                "personality_description": p.personality_description,
-                "shelter_name": p.shelter.name if p.shelter else None,
-                "listing_url": p.listing_url,
-                "image_urls": p.image_urls or [],
-            }
-            for p in pets
-        ],
+        "pets": [_pet_to_dict(p) for p in pets],
     }
 
 
@@ -254,8 +370,60 @@ async def get_pet(pet_id: str, session=Depends(get_db_session)):
     if not pet:
         raise HTTPException(status_code=404, detail="Pet not found")
 
+    return _pet_to_dict_full(pet)
+
+
+@app.get("/shelters")
+async def list_shelters(session=Depends(get_db_session)):
+    """List all registered shelters."""
+    repo = ShelterRepository(session)
+    shelters = repo.list_all()
+    return {
+        "count": len(shelters),
+        "shelters": [
+            {
+                "id": str(s.id),
+                "name": s.name,
+                "website_url": s.website_url,
+                "location": s.location,
+                "latitude": s.latitude,
+                "longitude": s.longitude,
+                "pet_count": len(s.pets) if s.pets else 0,
+            }
+            for s in shelters
+        ],
+    }
+
+
+# ── Helper functions for serializing pets ─────────────────────────────────────
+
+def _pet_to_dict(p: Pet) -> dict:
+    """Compact pet dict for list views."""
+    return {
+        "id": str(p.id),
+        "external_id": p.external_id,
+        "name": p.name,
+        "species": p.species,
+        "breed": p.breed,
+        "age_text": p.age_text,
+        "sex": p.sex,
+        "size": p.size,
+        "weight_lbs": p.weight_lbs,
+        "energy_level": p.energy_level,
+        "personality_description": p.personality_description,
+        "adoption_fee": p.adoption_fee,
+        "shelter_name": p.shelter.name if p.shelter else None,
+        "listing_url": p.listing_url,
+        "image_urls": p.image_urls or [],
+        "image_path": p.image_path,
+    }
+
+
+def _pet_to_dict_full(pet: Pet) -> dict:
+    """Full pet dict for detail views."""
     return {
         "id": str(pet.id),
+        "external_id": pet.external_id,
         "name": pet.name,
         "species": pet.species,
         "breed": pet.breed,
@@ -276,30 +444,15 @@ async def get_pet(pet_id: str, session=Depends(get_db_session)):
         "is_neutered": pet.is_neutered,
         "listing_url": pet.listing_url,
         "image_urls": pet.image_urls or [],
+        "image_path": pet.image_path,
+        "intake_date": pet.intake_date_str,
+        "source": pet.source,
         "shelter": {
             "name": pet.shelter.name,
             "location": pet.shelter.location,
+            "latitude": pet.shelter.latitude,
+            "longitude": pet.shelter.longitude,
             "contact": pet.shelter.contact_info,
             "website": pet.shelter.website_url,
         } if pet.shelter else None,
-    }
-
-
-@app.get("/shelters")
-async def list_shelters(session=Depends(get_db_session)):
-    """List all registered shelters."""
-    repo = ShelterRepository(session)
-    shelters = repo.list_all()
-    return {
-        "count": len(shelters),
-        "shelters": [
-            {
-                "id": str(s.id),
-                "name": s.name,
-                "website_url": s.website_url,
-                "location": s.location,
-                "pet_count": len(s.pets) if s.pets else 0,
-            }
-            for s in shelters
-        ],
     }
