@@ -1,26 +1,42 @@
 export interface Pet {
-  id: string;
+  // Core identity
+  id?: string;
   name: string;
   species: string;
   breed: string;
-  age_years?: number;
+  
+  // Age & demographics
+  age_text?: string;        // ← Changed from age_years
   age_months?: number;
   sex?: string;
   size?: string;
   color?: string;
-  description?: string;
-  personality?: string[];
-  special_needs?: string[];
-  good_with_kids?: boolean;
+  weight_lbs?: number;      // ← New field
+  
+  // Personality & behavior
+  personality_description?: string;  // ← Changed from description
+  energy_level?: string;            // ← New field
+  special_needs?: string;           // ← Changed from string[] to string
   good_with_dogs?: boolean;
   good_with_cats?: boolean;
+  good_with_children?: boolean;     // ← Changed from good_with_kids
+  house_trained?: boolean;          // ← New field
+  
+  // Logistics
   adoption_fee?: number;
-  image_url?: string;
-  shelter_id?: string;
+  is_neutered?: boolean;            // ← New field
   shelter_name?: string;
-  status?: string;
+  shelter_location?: string;        // ← New field
+  shelter_contact?: string;         // ← New field
+  
+  // Media & URLs
+  image_urls?: string[];            // ← Changed from image_url (singular)
+  image_path?: string;              // ← New field
+  listing_url?: string;             // ← New field
+  
+  // Source tracking
+  external_id?: string;             // ← New field
   intake_date?: string;
-  available_date?: string;
 }
 
 export interface MatchResult {

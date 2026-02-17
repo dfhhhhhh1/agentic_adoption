@@ -9,13 +9,36 @@ export const api = {
       : `${API_BASE}/pets`;
     const response = await fetch(url);
     if (!response.ok) throw new Error('Failed to fetch pets');
-    return response.json();
+    const data = await response.json();
+    
+    // Extract pets and resolve image URLs
+    const pets = Array.isArray(data.pets) ? data.pets : [];
+    return pets.map(pet => ({
+      ...pet,
+      image_urls: (pet.image_urls || []).map(url => 
+        url.startsWith('http') ? url : `${API_BASE}${url}`
+      ),
+      image_path: pet.image_path && !pet.image_path.startsWith('http')
+        ? `${API_BASE}${pet.image_path}`
+        : pet.image_path,
+    }));
   },
 
   async getPet(id: string): Promise<Pet> {
     const response = await fetch(`${API_BASE}/pets/${id}`);
     if (!response.ok) throw new Error('Failed to fetch pet');
-    return response.json();
+    const pet = await response.json();
+    
+    // Resolve image URLs
+    return {
+      ...pet,
+      image_urls: (pet.image_urls || []).map(url => 
+        url.startsWith('http') ? url : `${API_BASE}${url}`
+      ),
+      image_path: pet.image_path && !pet.image_path.startsWith('http')
+        ? `${API_BASE}${pet.image_path}`
+        : pet.image_path,
+    };
   },
 
   async matchPets(request: MatchRequest): Promise<MatchResult[]> {
@@ -25,13 +48,29 @@ export const api = {
       body: JSON.stringify(request),
     });
     if (!response.ok) throw new Error('Failed to match pets');
-    return response.json();
+    const data = await response.json();
+    
+    // Extract results and resolve image URLs in nested pets
+    const results = Array.isArray(data.results) ? data.results : [];
+    return results.map(result => ({
+      ...result,
+      pet: {
+        ...result.pet,
+        image_urls: (result.pet.image_urls || []).map(url => 
+          url.startsWith('http') ? url : `${API_BASE}${url}`
+        ),
+        image_path: result.pet.image_path && !result.pet.image_path.startsWith('http')
+          ? `${API_BASE}${result.pet.image_path}`
+          : result.pet.image_path,
+      },
+    }));
   },
 
   async getShelters(): Promise<Shelter[]> {
     const response = await fetch(`${API_BASE}/shelters`);
     if (!response.ok) throw new Error('Failed to fetch shelters');
-    return response.json();
+    const data = await response.json();
+    return Array.isArray(data.shelters) ? data.shelters : [];
   },
 
   async getStats(): Promise<Stats> {

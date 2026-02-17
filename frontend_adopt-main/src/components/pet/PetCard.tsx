@@ -14,7 +14,10 @@ export function PetCard({ pet, matchScore, reasoning, onClick }: PetCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  const personalityBadge = pet.personality?.[0] || 'Friendly';
+  const imageUrl = pet.image_urls && pet.image_urls.length > 0 
+  ? pet.image_urls[0] 
+  : pet.image_path; 
+  const personalityBadge = pet.personality_description?.[0] || 'Friendly';
   const badgeColors: Record<string, string> = {
     'Chill': 'bg-blue-100 text-blue-700 border-blue-300',
     'High Energy': 'bg-orange-100 text-orange-700 border-orange-300',
@@ -23,11 +26,10 @@ export function PetCard({ pet, matchScore, reasoning, onClick }: PetCardProps) {
     'Calm': 'bg-indigo-100 text-indigo-700 border-indigo-300',
   };
 
-  const age = pet.age_years
-    ? pet.age_years > 1
-      ? `${pet.age_years} years`
-      : `${pet.age_months || 0} months`
-    : 'Age unknown';
+  const age = pet.age_text
+    ? `${pet.age_text} years`
+    : `${pet.age_months || 0} months`;
+
 
   return (
     <motion.div
@@ -48,7 +50,7 @@ export function PetCard({ pet, matchScore, reasoning, onClick }: PetCardProps) {
           </div>
         )}
         <img
-          src={pet.image_url || `https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=600`}
+          src={imageUrl || `https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=600`}
           alt={pet.name}
           onLoad={() => setImageLoaded(true)}
           className={`w-full h-full object-cover transition-all duration-300 ${
@@ -124,14 +126,14 @@ export function PetCard({ pet, matchScore, reasoning, onClick }: PetCardProps) {
           )}
         </div>
 
-        {pet.description && (
+        {pet.personality_description && (
           <p className="text-sm text-gray-700 line-clamp-2 mb-3">
-            {pet.description}
+            {pet.personality_description}
           </p>
         )}
 
         <div className="flex flex-wrap gap-2">
-          {pet.good_with_kids && (
+          {pet.good_with_children && (
             <span className="px-2 py-1 bg-sage-50 text-sage-700 text-xs rounded border border-sage-200 font-medium">
               Good with kids
             </span>
