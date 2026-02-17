@@ -50,10 +50,14 @@ export const api = {
     if (!response.ok) throw new Error('Failed to match pets');
     const data = await response.json();
     
-    // Extract results and resolve image URLs in nested pets
+    // Extract results, map backend fields to frontend types, and resolve image URLs
     const results = Array.isArray(data.results) ? data.results : [];
     return results.map(result => ({
       ...result,
+      // Map backend field names → frontend MatchResult type
+      score: result.similarity_score ?? result.score ?? 0,
+      reasoning: result.reasoning ?? result.explanation ?? '',
+      match_percentage: result.match_percentage ?? Math.round((result.similarity_score ?? 0) * 100),
       pet: {
         ...result.pet,
         image_urls: (result.pet.image_urls || []).map(url => 

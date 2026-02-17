@@ -113,8 +113,10 @@ class MatchQuery(BaseModel):
 class MatchResult(BaseModel):
     """A single pet result returned by the matchmaker."""
     pet: PetSchema
-    similarity_score: float = Field(..., description="Cosine similarity 0-1")
+    similarity_score: float = Field(..., description="Blended similarity score 0-1")
+    match_percentage: int = Field(0, description="Match percentage 0-100 for display")
     explanation: Optional[str] = Field(None, description="LLM-generated reason for the match")
+    reasoning: Optional[str] = Field(None, description="LLM reasoning (alias for explanation, consumed by frontend)")
 
 
 class MatchResponse(BaseModel):

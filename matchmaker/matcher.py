@@ -60,9 +60,9 @@ Return ONLY a JSON object: {"score": <float>}
 Score 0.0 (terrible fit) to 1.0 (perfect fit). No other text."""
 
 EXPLAIN_SYSTEM = """You are a friendly pet adoption matchmaker.
-In 1-2 sentences explain why this specific pet suits the adopter.
+In 2-3 sentences explain why this specific pet suits (or doesn't suit) the adopter.
 Return ONLY a JSON object: {"explanation": "<your explanation here>"}
-Focus on 1-2 concrete compatibility reasons. No other text."""
+Be specific — mention the pet's name, breed traits, energy level, and how they match the adopter's needs. No other text."""
 
 
 # ── JSON helpers ──────────────────────────────────────────────────────────────
@@ -178,6 +178,43 @@ def _pet_full(pet: Pet) -> str:
     return "\n".join(lines)
 
 
+def _pet_fallback_reasoning(pet: Pet) -> str:
+    """Generate a specific fallback explanation when LLM explanation fails.
+    
+    BUG FIX: The old code returned the same generic string for every pet.
+    This version uses actual pet attributes so each fallback is unique.
+    """
+    traits = []
+    if pet.energy_level and pet.energy_level != "unknown":
+        traits.append(f"{pet.energy_level}-energy")
+    if pet.size and pet.size != "unknown":
+        traits.append(f"{pet.size}-sized")
+    
+    personality_snippet = ""
+    if pet.personality_description:
+        # Take just the first sentence
+        first_sentence = pet.personality_description.split('.')[0].strip()
+        if len(first_sentence) > 10:
+            personality_snippet = f" {first_sentence}."
+    
+    compat_parts = []
+    if pet.good_with_children:
+        compat_parts.append("children")
+    if pet.good_with_dogs:
+        compat_parts.append("dogs")
+    if pet.good_with_cats:
+        compat_parts.append("cats")
+    compat_str = ""
+    if compat_parts:
+        compat_str = f" Gets along well with {', '.join(compat_parts)}."
+    
+    trait_str = f" {' '.join(traits)}" if traits else ""
+    return (
+        f"{pet.name} is a{trait_str} {pet.breed} "
+        f"who could be a great companion.{personality_snippet}{compat_str}"
+    )
+
+
 def _pet_orm_to_schema(pet: Pet) -> PetSchema:
     return PetSchema(
         name=pet.name,
@@ -215,7 +252,8 @@ def _pet_orm_to_schema(pet: Pet) -> PetSchema:
 def _score_batch(user_query: str, pets: list[Pet], settings) -> list[float]:
     """
     Score a small batch of pets (BATCH_SIZE). Returns a float list in the same order.
-    Falls back to [0.5, ...] if the model cannot produce parseable output after retries.
+    Falls back to None if the model cannot produce parseable output after retries,
+    signaling the caller to use vector similarity scores instead.
     """
     if not pets:
         return []
@@ -256,14 +294,20 @@ def _score_batch(user_query: str, pets: list[Pet], settings) -> list[float]:
         return [max(0.0, min(1.0, s)) for s in scores]
 
     except Exception as e:
-        logger.warning("Batch scoring failed, using 0.5 fallback", error=str(e), batch_size=len(pets))
-        return [0.5] * len(pets)
+        # BUG FIX: Return None instead of [0.5]*N so the caller knows scoring
+        # failed and can fall back to vector similarity scores instead of
+        # giving every pet the identical 0.5 score.
+        logger.warning("Batch scoring failed, returning None for vec-score fallback", error=str(e), batch_size=len(pets))
+        return None
 
 
-def _score_all_pets(user_query: str, pets: list[Pet], settings) -> dict[int, float]:
+def _score_all_pets(user_query: str, pets: list[Pet], settings) -> tuple[dict[int, float], bool]:
     """
-    Score all pets in parallel batches. Returns {original_index: score}.
-    Uses ThreadPoolExecutor so multiple batches hit Ollama concurrently.
+    Score all pets in parallel batches. Returns ({original_index: score}, llm_scored).
+    
+    BUG FIX: Now returns a boolean indicating whether LLM scoring actually worked.
+    When it didn't, the caller can weight vector similarity higher instead of
+    showing identical percentages for all pets.
     """
     batches: list[tuple[list[int], list[Pet]]] = []
     for start in range(0, len(pets), BATCH_SIZE):
@@ -272,6 +316,7 @@ def _score_all_pets(user_query: str, pets: list[Pet], settings) -> dict[int, flo
         batches.append((indices, chunk))
 
     scores: dict[int, float] = {}
+    llm_succeeded = False
 
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
         future_to_indices = {
@@ -284,13 +329,27 @@ def _score_all_pets(user_query: str, pets: list[Pet], settings) -> dict[int, flo
                 batch_scores = future.result()
             except Exception as e:
                 logger.error("Batch future failed", indices=idxs, error=str(e))
-                batch_scores = [0.5] * len(idxs)
+                batch_scores = None
 
-            for idx, score in zip(idxs, batch_scores):
-                scores[idx] = score
+            if batch_scores is not None:
+                llm_succeeded = True
+                for idx, score in zip(idxs, batch_scores):
+                    scores[idx] = score
+            else:
+                # Mark these as needing fallback (use None sentinel)
+                for idx in idxs:
+                    scores[idx] = None
 
-    logger.info("Scoring complete", scored=len(scores), total_pets=len(pets))
-    return scores
+    # Fill in None entries with a fallback value
+    # If LLM scored some but not all, use the average LLM score as fallback
+    valid_scores = [s for s in scores.values() if s is not None]
+    fallback = sum(valid_scores) / len(valid_scores) if valid_scores else 0.5
+    for idx in scores:
+        if scores[idx] is None:
+            scores[idx] = fallback
+
+    logger.info("Scoring complete", scored=len(scores), total_pets=len(pets), llm_succeeded=llm_succeeded)
+    return scores, llm_succeeded
 
 
 # ── Explanations ──────────────────────────────────────────────────────────────
@@ -310,20 +369,21 @@ def _explain_one(user_query: str, pet: Pet, settings) -> str:
             return str(explanation).strip()
     except Exception as e:
         logger.warning("Explanation failed", pet=pet.name, error=str(e))
-    return f"{pet.name} is a good match for your lifestyle."
+    # BUG FIX: Return pet-specific fallback instead of generic string
+    return _pet_fallback_reasoning(pet)
 
 
 def _explain_top_pets(
     user_query: str,
     top_pets: list[Pet],
     settings,
-    explain_n: int = 3,
+    explain_n: int = 10,  # BUG FIX: Was 3, now explains up to 10 pets by default
 ) -> dict[int, str]:
     """Explain the top N pets in parallel. Returns {list_index: explanation}."""
     to_explain = top_pets[:explain_n]
     results: dict[int, str] = {}
 
-    with ThreadPoolExecutor(max_workers=min(explain_n, MAX_WORKERS)) as pool:
+    with ThreadPoolExecutor(max_workers=min(len(to_explain), max(MAX_WORKERS, 2))) as pool:
         futures = {
             pool.submit(_explain_one, user_query, pet, settings): i
             for i, pet in enumerate(to_explain)
@@ -333,12 +393,13 @@ def _explain_top_pets(
             try:
                 results[i] = future.result()
             except Exception:
-                results[i] = f"{to_explain[i].name} is a great match for you."
+                # BUG FIX: Pet-specific fallback instead of generic
+                results[i] = _pet_fallback_reasoning(to_explain[i])
 
-    # Fill remaining with default
+    # Fill remaining with pet-specific defaults (for any pets beyond explain_n)
     for i in range(len(top_pets)):
         if i not in results:
-            results[i] = f"{top_pets[i].name} is a good match for your lifestyle."
+            results[i] = _pet_fallback_reasoning(top_pets[i])
 
     return results
 
@@ -382,7 +443,7 @@ def match_pets(query: MatchQuery) -> MatchResponse:
     Run the two-pass RAG matching pipeline with optional agentic retry.
 
     Pass 1 — SCORE: Small-batch parallel scoring, robust JSON parsing.
-    Pass 2 — EXPLAIN: One-pet-at-a-time explanations for the top 3.
+    Pass 2 — EXPLAIN: One-pet-at-a-time explanations for the top N.
     Agent   — If best score < LOW_CONFIDENCE_THRESHOLD, widen and rescore.
     """
     settings = get_settings()
@@ -418,7 +479,7 @@ def match_pets(query: MatchQuery) -> MatchResponse:
 
         # Step 3: Score all candidates in parallel batches
         logger.info("Starting parallel batch scoring", pet_count=len(pet_objects))
-        relevance_scores = _score_all_pets(query.query, pet_objects, settings)
+        relevance_scores, llm_scored = _score_all_pets(query.query, pet_objects, settings)
 
         # Step 4 (Agent): Widen search if confidence is low
         best_score = max(relevance_scores.values(), default=0.0)
@@ -446,7 +507,8 @@ def match_pets(query: MatchQuery) -> MatchResponse:
             new_pet_objects = [p for p, _ in new_pairs]
             offset = len(pet_objects)
 
-            new_rel_scores = _score_all_pets(query.query, new_pet_objects, settings)
+            new_rel_scores, new_llm_scored = _score_all_pets(query.query, new_pet_objects, settings)
+            llm_scored = llm_scored or new_llm_scored
 
             pet_objects.extend(new_pet_objects)
             similarity_scores.update({offset + i: s for i, (_, s) in enumerate(new_pairs)})
@@ -470,29 +532,44 @@ def match_pets(query: MatchQuery) -> MatchResponse:
             best_score=round(relevance_scores.get(ranked_indices[0], 0.0), 3) if ranked_indices else 0,
         )
 
-        # Step 6: Explain top 3 matches (parallel, one pet at a time)
-        explanations = _explain_top_pets(query.query, top_pets, settings)
+        # Step 6: Explain ALL returned matches (not just top 3)
+        # BUG FIX: Was only explaining top 3, now explains all returned pets
+        explanations = _explain_top_pets(query.query, top_pets, settings, explain_n=len(top_pets))
 
         # Step 7: Build response
+        # BUG FIX: Adjust blending weights based on whether LLM scoring worked.
+        # If LLM scoring failed, lean heavily on vector similarity to preserve
+        # score differentiation instead of showing identical percentages.
+        if llm_scored:
+            llm_weight, vec_weight = 0.7, 0.3
+        else:
+            llm_weight, vec_weight = 0.1, 0.9
+            logger.info("LLM scoring failed — using vector similarity as primary ranking signal")
+
         results = []
         for list_pos, pet_idx in enumerate(ranked_indices):
             pet = pet_objects[pet_idx]
             llm_score = relevance_scores.get(pet_idx, 0.5)
             vec_score = similarity_scores.get(pet_idx, 0.0)
-            blended = round(0.7 * llm_score + 0.3 * vec_score, 4)
+            blended = round(llm_weight * llm_score + vec_weight * vec_score, 4)
+
+            explanation_text = explanations.get(list_pos, _pet_fallback_reasoning(pet))
 
             results.append(
                 MatchResult(
                     pet=_pet_orm_to_schema(pet),
                     similarity_score=blended,
-                    explanation=explanations.get(list_pos, f"{pet.name} is a good match for your lifestyle."),
+                    match_percentage=round(blended * 100),
+                    explanation=explanation_text,
+                    reasoning=explanation_text,
                 )
             )
 
         agent_note = f" (agent widened search {agent_round}x)" if agent_round else ""
+        scoring_note = "" if llm_scored else " Scores based primarily on profile similarity."
         reasoning_summary = (
             f"Found {len(results)} great match{'es' if len(results) != 1 else ''} "
-            f"for your lifestyle{agent_note}."
+            f"for your lifestyle{agent_note}.{scoring_note}"
         )
 
         return MatchResponse(
