@@ -43,8 +43,8 @@ logger = structlog.get_logger(__name__)
 # ── Tunables ──────────────────────────────────────────────────────────────────
 
 BATCH_SIZE = 3          # Pets per scoring call — keep small for local models
-MAX_WORKERS = 3         # Parallel Ollama calls (keep <= your GPU layers)
-SCORE_TIMEOUT = 30.0    # Per-batch timeout (seconds) — small prompt = fast
+MAX_WORKERS = 1         # Parallel Ollama calls (keep <= your GPU layers)
+SCORE_TIMEOUT = 50.0    # Per-batch timeout (seconds) — small prompt = fast
 EXPLAIN_TIMEOUT = 45.0  # Per-pet explanation timeout
 LOW_CONFIDENCE_THRESHOLD = 0.55  # Trigger agent retry if best score < this
 MAX_AGENT_ROUNDS = 2    # How many times the agent may widen the search
