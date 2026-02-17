@@ -181,8 +181,7 @@ def _pet_full(pet: Pet) -> str:
 def _pet_fallback_reasoning(pet: Pet) -> str:
     """Generate a specific fallback explanation when LLM explanation fails.
     
-    BUG FIX: The old code returned the same generic string for every pet.
-    This version uses actual pet attributes so each fallback is unique.
+    Uses actual pet attributes so each fallback is unique per pet.
     """
     traits = []
     if pet.energy_level and pet.energy_level != "unknown":
@@ -192,7 +191,6 @@ def _pet_fallback_reasoning(pet: Pet) -> str:
     
     personality_snippet = ""
     if pet.personality_description:
-        # Take just the first sentence
         first_sentence = pet.personality_description.split('.')[0].strip()
         if len(first_sentence) > 10:
             personality_snippet = f" {first_sentence}."
@@ -216,7 +214,13 @@ def _pet_fallback_reasoning(pet: Pet) -> str:
 
 
 def _pet_orm_to_schema(pet: Pet) -> PetSchema:
+    """Convert a Pet ORM object to a PetSchema for API responses.
+    
+    CRITICAL: Includes `id=str(pet.id)` so the frontend can match
+    each card to its per-pet reasoning/score via getMatchData(pet.id).
+    """
     return PetSchema(
+        id=str(pet.id),  # ← THIS WAS MISSING — the root cause of duplicate display
         name=pet.name,
         species=pet.species,
         breed=pet.breed,
@@ -249,11 +253,10 @@ def _pet_orm_to_schema(pet: Pet) -> PetSchema:
 # ── Scoring ───────────────────────────────────────────────────────────────────
 
 @retry_with_backoff(max_retries=2, base_delay=1.0)
-def _score_batch(user_query: str, pets: list[Pet], settings) -> list[float]:
+def _score_batch(user_query: str, pets: list[Pet], settings) -> list[float] | None:
     """
     Score a small batch of pets (BATCH_SIZE). Returns a float list in the same order.
-    Falls back to None if the model cannot produce parseable output after retries,
-    signaling the caller to use vector similarity scores instead.
+    Returns None if the model cannot produce parseable output after retries.
     """
     if not pets:
         return []
@@ -294,9 +297,6 @@ def _score_batch(user_query: str, pets: list[Pet], settings) -> list[float]:
         return [max(0.0, min(1.0, s)) for s in scores]
 
     except Exception as e:
-        # BUG FIX: Return None instead of [0.5]*N so the caller knows scoring
-        # failed and can fall back to vector similarity scores instead of
-        # giving every pet the identical 0.5 score.
         logger.warning("Batch scoring failed, returning None for vec-score fallback", error=str(e), batch_size=len(pets))
         return None
 
@@ -304,10 +304,6 @@ def _score_batch(user_query: str, pets: list[Pet], settings) -> list[float]:
 def _score_all_pets(user_query: str, pets: list[Pet], settings) -> tuple[dict[int, float], bool]:
     """
     Score all pets in parallel batches. Returns ({original_index: score}, llm_scored).
-    
-    BUG FIX: Now returns a boolean indicating whether LLM scoring actually worked.
-    When it didn't, the caller can weight vector similarity higher instead of
-    showing identical percentages for all pets.
     """
     batches: list[tuple[list[int], list[Pet]]] = []
     for start in range(0, len(pets), BATCH_SIZE):
@@ -336,12 +332,10 @@ def _score_all_pets(user_query: str, pets: list[Pet], settings) -> tuple[dict[in
                 for idx, score in zip(idxs, batch_scores):
                     scores[idx] = score
             else:
-                # Mark these as needing fallback (use None sentinel)
                 for idx in idxs:
                     scores[idx] = None
 
-    # Fill in None entries with a fallback value
-    # If LLM scored some but not all, use the average LLM score as fallback
+    # Fill None entries with fallback
     valid_scores = [s for s in scores.values() if s is not None]
     fallback = sum(valid_scores) / len(valid_scores) if valid_scores else 0.5
     for idx in scores:
@@ -369,7 +363,6 @@ def _explain_one(user_query: str, pet: Pet, settings) -> str:
             return str(explanation).strip()
     except Exception as e:
         logger.warning("Explanation failed", pet=pet.name, error=str(e))
-    # BUG FIX: Return pet-specific fallback instead of generic string
     return _pet_fallback_reasoning(pet)
 
 
@@ -377,7 +370,7 @@ def _explain_top_pets(
     user_query: str,
     top_pets: list[Pet],
     settings,
-    explain_n: int = 10,  # BUG FIX: Was 3, now explains up to 10 pets by default
+    explain_n: int = 10,
 ) -> dict[int, str]:
     """Explain the top N pets in parallel. Returns {list_index: explanation}."""
     to_explain = top_pets[:explain_n]
@@ -393,10 +386,9 @@ def _explain_top_pets(
             try:
                 results[i] = future.result()
             except Exception:
-                # BUG FIX: Pet-specific fallback instead of generic
                 results[i] = _pet_fallback_reasoning(to_explain[i])
 
-    # Fill remaining with pet-specific defaults (for any pets beyond explain_n)
+    # Fill remaining with pet-specific defaults
     for i in range(len(top_pets)):
         if i not in results:
             results[i] = _pet_fallback_reasoning(top_pets[i])
@@ -417,7 +409,7 @@ def _agent_widen_search(
     Agentic retry: if top scores are weak, widen the candidate pool.
     Each round doubles the search space and drops the species filter.
     """
-    multiplier = 2 ** round_num  # Round 1 -> 2x, Round 2 -> 4x
+    multiplier = 2 ** round_num
     new_top_k = query.max_results * 4 * multiplier
 
     logger.info(
@@ -431,7 +423,7 @@ def _agent_widen_search(
     candidates = pet_repo.vector_search(
         query_embedding=query_embedding,
         top_k=new_top_k,
-        species_filter=None,  # Drop species filter on retry
+        species_filter=None,
     )
     return candidates
 
@@ -498,7 +490,6 @@ def match_pets(query: MatchQuery) -> MatchResponse:
             if not new_candidates:
                 break
 
-            # Deduplicate by pet id
             existing_ids = {p.id for p in pet_objects}
             new_pairs = [(p, s) for p, s in new_candidates if p.id not in existing_ids]
             if not new_pairs:
@@ -532,14 +523,10 @@ def match_pets(query: MatchQuery) -> MatchResponse:
             best_score=round(relevance_scores.get(ranked_indices[0], 0.0), 3) if ranked_indices else 0,
         )
 
-        # Step 6: Explain ALL returned matches (not just top 3)
-        # BUG FIX: Was only explaining top 3, now explains all returned pets
+        # Step 6: Explain ALL returned matches
         explanations = _explain_top_pets(query.query, top_pets, settings, explain_n=len(top_pets))
 
-        # Step 7: Build response
-        # BUG FIX: Adjust blending weights based on whether LLM scoring worked.
-        # If LLM scoring failed, lean heavily on vector similarity to preserve
-        # score differentiation instead of showing identical percentages.
+        # Step 7: Build response with adaptive blending
         if llm_scored:
             llm_weight, vec_weight = 0.7, 0.3
         else:

@@ -50,7 +50,15 @@ class EnergyLevel(str, Enum):
 # ── Core Extraction Schema ────────────────────────────────────────────────────
 
 class PetSchema(BaseModel):
-    """Schema the LLM extraction agent must populate for every pet listing."""
+    """Schema the LLM extraction agent must populate for every pet listing.
+    
+    Also used as the nested pet object in MatchResult API responses.
+    The `id` field is None during LLM extraction (not yet in DB) but populated
+    when returned from the matchmaker/API.
+    """
+
+    # Database ID — None during extraction, populated in API responses
+    id: Optional[str] = Field(None, description="Database UUID, populated in API responses")
 
     name: str = Field(..., description="Pet's name as listed by the shelter")
     species: Species = Field(..., description="Type of animal")
@@ -114,9 +122,9 @@ class MatchResult(BaseModel):
     """A single pet result returned by the matchmaker."""
     pet: PetSchema
     similarity_score: float = Field(..., description="Blended similarity score 0-1")
-    match_percentage: int = Field(0, description="Match percentage 0-100 for display")
+    match_percentage: int = Field(0, description="Match percentage 0-100 for frontend display")
     explanation: Optional[str] = Field(None, description="LLM-generated reason for the match")
-    reasoning: Optional[str] = Field(None, description="LLM reasoning (alias for explanation, consumed by frontend)")
+    reasoning: Optional[str] = Field(None, description="LLM reasoning text (same as explanation, consumed by frontend)")
 
 
 class MatchResponse(BaseModel):
@@ -168,7 +176,7 @@ class JsonImportRequest(BaseModel):
 
 class JsonImportResponse(BaseModel):
     """Response after a JSON import."""
-    pets_loaded: int
-    pets_skipped: int
-    shelters_created: int
+    pets_loaded: int = 0
+    pets_skipped: int = 0
+    shelters_created: int = 0
     errors: list[str] = Field(default_factory=list)
