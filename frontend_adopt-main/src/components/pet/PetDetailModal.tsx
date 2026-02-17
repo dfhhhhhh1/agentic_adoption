@@ -12,16 +12,17 @@ interface PetDetailModalProps {
 export function PetDetailModal({ pet, onClose, matchScore, reasoning }: PetDetailModalProps) {
   if (!pet) return null;
 
-  const age = pet.age_years
-    ? pet.age_years > 1
-      ? `${pet.age_years} years old`
-      : `${pet.age_months || 0} months old`
-    : 'Age unknown';
+  const age = pet.age_text
+    ? `${pet.age_text} years old`
+    : `${pet.age_months || 0} months old`;
+
+  const imageUrl = pet.image_urls && pet.image_urls.length > 0 
+  ? pet.image_urls[0] 
+  : pet.image_path; 
 
   const timeline = [
     { label: 'Intake', date: pet.intake_date, icon: Calendar },
     { label: 'Health Check', date: pet.intake_date, icon: CheckCircle2 },
-    { label: 'Ready for Home', date: pet.available_date, icon: Heart },
   ];
 
   return (
@@ -54,7 +55,7 @@ export function PetDetailModal({ pet, onClose, matchScore, reasoning }: PetDetai
             <div className="space-y-4">
               <div className="relative aspect-square rounded-xl overflow-hidden border-4 border-black shadow-neo">
                 <img
-                  src={pet.image_url || `https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=800`}
+                  src={imageUrl || `https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=800`}
                   alt={pet.name}
                   className="w-full h-full object-cover"
                 />
@@ -169,13 +170,13 @@ export function PetDetailModal({ pet, onClose, matchScore, reasoning }: PetDetai
                   </div>
                 </div>
 
-                {pet.special_needs && pet.special_needs.length > 0 && (
+                {pet.special_needs && (
                   <div className="mt-4 p-3 bg-yellow-50 border-2 border-yellow-300 rounded-lg">
                     <div className="flex items-start gap-2">
                       <Info className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
                       <div>
                         <h4 className="font-semibold text-gray-900 mb-1">Special Needs</h4>
-                        <p className="text-sm text-gray-700">{pet.special_needs.join(', ')}</p>
+                        <p className="text-sm text-gray-700">{pet.special_needs}</p>
                       </div>
                     </div>
                   </div>
