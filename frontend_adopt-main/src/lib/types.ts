@@ -6,36 +6,36 @@ export interface Pet {
   breed: string;
   
   // Age & demographics
-  age_text?: string;        // ← Changed from age_years
+  age_text?: string;
   age_months?: number;
   sex?: string;
   size?: string;
   color?: string;
-  weight_lbs?: number;      // ← New field
+  weight_lbs?: number;
   
   // Personality & behavior
-  personality_description?: string;  // ← Changed from description
-  energy_level?: string;            // ← New field
-  special_needs?: string;           // ← Changed from string[] to string
+  personality_description?: string;
+  energy_level?: string;
+  special_needs?: string;
   good_with_dogs?: boolean;
   good_with_cats?: boolean;
-  good_with_children?: boolean;     // ← Changed from good_with_kids
-  house_trained?: boolean;          // ← New field
+  good_with_children?: boolean;
+  house_trained?: boolean;
   
   // Logistics
   adoption_fee?: number;
-  is_neutered?: boolean;            // ← New field
+  is_neutered?: boolean;
   shelter_name?: string;
-  shelter_location?: string;        // ← New field
-  shelter_contact?: string;         // ← New field
+  shelter_location?: string;
+  shelter_contact?: string;
   
   // Media & URLs
-  image_urls?: string[];            // ← Changed from image_url (singular)
-  image_path?: string;              // ← New field
-  listing_url?: string;             // ← New field
+  image_urls?: string[];
+  image_path?: string;
+  listing_url?: string;
   
   // Source tracking
-  external_id?: string;             // ← New field
+  external_id?: string;
   intake_date?: string;
 }
 
@@ -54,13 +54,18 @@ export interface MatchRequest {
 export interface Shelter {
   id: string;
   name: string;
+  website_url?: string;
   website?: string;
   address?: string;
+  location?: string;
   city?: string;
   state?: string;
   zip_code?: string;
   phone?: string;
   email?: string;
+  latitude?: number;
+  longitude?: number;
+  pet_count?: number;
 }
 
 export interface Stats {
