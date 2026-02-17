@@ -42,6 +42,7 @@ from models.schemas import (
     PetSchema,
     Species,
 )
+from api.ask_router import router as ask_router
 
 logger = structlog.get_logger(__name__)
 
@@ -75,6 +76,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(ask_router)
+
 
 # ── Static file serving for pet images ────────────────────────────────────────
 # The DB stores image_path values like "/images/A755074.jpeg".

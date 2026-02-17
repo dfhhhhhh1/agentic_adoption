@@ -13,3 +13,13 @@
     @apply font-display;
   }
 }
+
+.leaflet-popup-content-wrapper {
+  border: 3px solid black !important;
+  border-radius: 0px !important; /* Sharp corners */
+  box-shadow: 4px 4px 0px 0px rgba(0,0,0,1) !important;
+}
+
+.leaflet-popup-tip {
+  border: 2px solid black !important;
+}

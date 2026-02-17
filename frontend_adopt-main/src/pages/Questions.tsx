@@ -5,9 +5,14 @@ import {
   User, AlertCircle, PawPrint, Info
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import ReactMarkdown from 'react-markdown';
 
 const API_BASE = 'http://localhost:8000';
+import vetData from '../../../vet_locations.json'; // Import your JSON
+import { VetMap } from '../components/VetMap/VetMap';
 
+// Add a helper to detect emergency keywords
+const EMERGENCY_KEYWORDS = ['emergency', 'urgent', 'toxic', 'poison', 'seizure', 'bleeding', 'clinic', 'hospital'];
 // ── Types ────────────────────────────────────────────────────────────────────
 
 interface Agent {
@@ -81,7 +86,7 @@ export function Questions() {
   const [showContextInput, setShowContextInput] = useState(false);
   const [agentsLoaded, setAgentsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
+  const [userCoords, setUserCoords] = useState<[number, number] | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -90,6 +95,13 @@ export function Questions() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, []);
 
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => setUserCoords([pos.coords.latitude, pos.coords.longitude]),
+      () => setUserCoords([38.9517, -92.3341]) // Fallback to Columbia, MO
+    );
+  }, []);
+  
   useEffect(() => {
     scrollToBottom();
   }, [messages, scrollToBottom]);
@@ -385,7 +397,49 @@ export function Questions() {
                       : 'bg-gray-50 text-gray-800 border-gray-200 rounded-bl-sm'
                     }
                   `}>
-                    <div className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</div>
+                    <div className="text-sm leading-relaxed prose prose-sm max-w-none">
+                      <ReactMarkdown 
+                        components={{
+                          // This ensures your bold text and lists look correct in Tailwind
+                          p: ({children}) => <p className="mb-2 last:mb-0">{children}</p>,
+                          strong: ({children}) => <strong className="font-bold text-gray-900">{children}</strong>,
+                          ul: ({children}) => <ul className="list-disc ml-4 mb-2">{children}</ul>,
+                          ol: ({children}) => <ol className="list-decimal ml-4 mb-2">{children}</ol>,
+                          li: ({children}) => <li className="mb-1">{children}</li>,
+                        }}
+                      >
+                        {msg.content}
+                      </ReactMarkdown>
+                    </div>
+                    {/* ... existing ReactMarkdown code ... */}
+
+                    {msg.role === 'assistant' && 
+                    selectedAgent === 'vet' && 
+                    EMERGENCY_KEYWORDS.some(k => msg.content.toLowerCase().includes(k)) && (
+                      <div className="mt-4">
+                        <div className="flex items-center gap-2 mb-2 text-rose-600 font-bold text-sm">
+                          <AlertCircle className="w-4 h-4" />
+                          <span>Found nearby emergency clinics:</span>
+                        </div>
+                        <VetMap 
+                          clinics={vetData.filter(v => v.is_24hr)} // Only show 24hr clinics for emergencies
+                          userLocation={userCoords || [38.9517, -92.3341]} 
+                        />
+                        <div className="mt-2 grid grid-cols-1 gap-2">
+                          {vetData.slice(0, 2).map((vet, i) => (
+                            <a 
+                              key={i}
+                              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(vet.name + ' ' + vet.address)}`}
+                              target="_blank"
+                              className="text-xs p-2 bg-white border-2 border-gray-200 rounded-lg hover:border-black transition-all flex justify-between items-center"
+                            >
+                              <span>{vet.name}</span>
+                              <ChevronRight className="w-3 h-3" />
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                     <p className={`text-xs mt-2 ${msg.role === 'user' ? 'text-sage-200' : 'text-gray-400'}`}>
                       {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
