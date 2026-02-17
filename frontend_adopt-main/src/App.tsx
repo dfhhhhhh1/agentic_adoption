@@ -7,6 +7,8 @@ import { Community } from './pages/Community';
 import { Exchange } from './pages/Exchange';
 import { api } from './lib/api';
 import { Motivation } from './pages/Motivation';
+import { Questions } from './pages/Questions';
+
 
 
 const queryClient = new QueryClient({
@@ -49,6 +51,8 @@ function App() {
         return <Motivation />;
       case 'exchange':
         return <Exchange />;
+      case 'questions':
+        return <Questions />;
       default:
         return <Dashboard />;
     }

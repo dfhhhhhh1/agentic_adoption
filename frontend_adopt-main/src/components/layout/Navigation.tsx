@@ -1,4 +1,4 @@
-import { Home, Heart, Map, MessageCircle } from 'lucide-react';
+import { Home, Heart, Map, MessageCircle, HelpCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { BarChart3 } from 'lucide-react';
 
@@ -14,6 +14,7 @@ export function Navigation({ activeTab, onTabChange, isApiOnline }: NavigationPr
     { id: 'adopt', label: 'Adopt', icon: Heart },
     { id: 'map', label: 'Community', icon: Map },
     { id: 'motivation', label: 'Impact', icon: BarChart3 },
+    { id: 'questions', label: 'Questions', icon: HelpCircle },
     { id: 'exchange', label: 'Exchange', icon: MessageCircle },
   ];
 

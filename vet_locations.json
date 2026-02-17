@@ -1,0 +1,82 @@
+[
+    {
+      "name": "BluePearl Pet Hospital",
+      "address": "139 NE 91 St, Kansas City, MO 64155",
+      "city": "Kansas City",
+      "latitude": 39.2588,
+      "longitude": -94.5771,
+      "is_24hr": true
+    },
+    {
+      "name": "MU Veterinary Health Center",
+      "address": "900 E Campus Dr, Columbia, MO 65211",
+      "city": "Columbia",
+      "latitude": 38.9401,
+      "longitude": -92.3181,
+      "is_24hr": true
+    },
+    {
+      "name": "VEG (Veterinary Emergency Group)",
+      "address": "2101 S Brentwood Blvd, Brentwood, MO 63144",
+      "city": "Brentwood",
+      "latitude": 38.6180,
+      "longitude": -90.3470,
+      "is_24hr": true
+    },
+    {
+      "name": "Animal Emergency Clinic",
+      "address": "9937 Big Bend Rd, Kirkwood, MO 63122",
+      "city": "Kirkwood",
+      "latitude": 38.5779,
+      "longitude": -90.4426,
+      "is_24hr": true
+    },
+    {
+      "name": "Horton Animal Hospital-Discovery",
+      "address": "3609 Endeavor Ave, Columbia, MO 65201",
+      "city": "Columbia",
+      "latitude": 38.9000,
+      "longitude": -92.2900,
+      "is_24hr": true
+    },
+    {
+      "name": "BluePearl Pet Hospital",
+      "address": "3495 NE Ralph Powell Rd, Lee's Summit, MO 64064",
+      "city": "Lee's Summit",
+      "latitude": 38.9800,
+      "longitude": -94.3600,
+      "is_24hr": true
+    },
+    {
+      "name": "Animal Talk Medical Center",
+      "address": "12800 Veterans Memorial Pkwy, Wentzville, MO 63385",
+      "city": "Wentzville",
+      "latitude": 38.8100,
+      "longitude": -90.8200,
+      "is_24hr": true
+    },
+    {
+      "name": "Veterinary Specialty Services West",
+      "address": "7770 Winghaven Blvd, O'Fallon, MO 63368",
+      "city": "O'Fallon",
+      "latitude": 38.7593,
+      "longitude": -90.7002,
+      "is_24hr": true
+    },
+    {
+      "name": "Gladstone Animal Clinic",
+      "address": "7915 N Oak Trafficway, Kansas City, MO 64118",
+      "city": "Kansas City",
+      "latitude": 39.2300,
+      "longitude": -94.5700,
+      "is_24hr": false
+    },
+    {
+      "name": "Vet Stop Animal Hospital",
+      "address": "7030 Mexico Rd, St. Peters, MO 63376",
+      "city": "St. Peters",
+      "latitude": 38.7941,
+      "longitude": -90.6234,
+      "is_24hr": false
+    }
+  ]

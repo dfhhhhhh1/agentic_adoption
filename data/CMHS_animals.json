@@ -588,25 +588,214 @@
     "image_path": "/images/A755697.jpeg"
   },
   {
-    "id": "30284",
-    "name": "Busby",
+    "id": "A746545",
+    "name": "Zeus",
     "type": "Dog",
-    "breed": "Mixed Breed (Medium)",
+    "breed": "Treeing Walker Coonhound and Mix",
     "sex": "Male",
-    "weight_lbs": 29,
+    "weight_lbs": 71,
     "age": {
-      "years": 0,
-      "months": 5
+      "years": 1,
+      "months": 0
     },
     "location": {
-      "name": "Jefferson City Animal Shelter",
-      "lat": 38.577937,
-      "long": -92.212283
+      "name": "Humane Society of Missouri - Maryland Heights",
+      "lat": 38.700835,
+      "long": -90.428560
     },
-    "adoption_fee": 125,
-    "intake_date": "Unknown",
-    "description": "Name: Busby Age: 5-5.5 months old Breed: Mixed breed Gender: neuterd male Current Weight: 29 lbs Estimated weight when grown: 50-70 lbs House broke: Unknown Good with Dogs: Unknown Good with Cats: Unknown Good with Children: Unknown Heartworm Test: Too young to test Adoption Fee: $125.00 Misc. Information: Busby was brought to the shelter as a stray so little is known about him at this time. He has been a sweet boy who is really nervous here at the shelter. Let him come to you and do not back him into the corner of his kennel. Once out of the shelter envirnoment he may settle down more and not be so nervous. The shelter provides a 5-day health guarantee for adopted animals. This includes health conditions not present or known about by the shelter at the of adoption, which adopter becomes aware of within 5 days. Injuries or accidents that occur at the adopter's home are not covered. The shelter is not responsible for incurred costs from local veterinarians due to non-compliance. ALL adoptions are final! Animals can be returned to the shelter for any reason, however, there are NO refunds or exchanges.",
-    "image_path": "/images/30284.png"
+    "adoption_fee": 100,
+    "intake_date": "02/06/2026",
+    "description": "Tricolor.",
+    "image_path": "/images/A746545.jpeg"
+  },
+  {
+    "id": "A747660",
+    "name": "Bruce",
+    "type": "Dog",
+    "breed": "American Pit Bull Terrier",
+    "sex": "Male",
+    "weight_lbs": 66.6,
+    "age": {
+      "years": 6,
+      "months": 0
+    },
+    "location": {
+      "name": "Humane Society of Missouri - Maryland Heights",
+      "lat": 38.700835,
+      "long": -90.428560
+    },
+    "adoption_fee": 100,
+    "intake_date": "01/08/2026",
+    "description": "Tan and White",
+    "image_path": "/images/A747660.jpeg"
+  },
+  {
+    "id": "A753202",
+    "name": "Harley",
+    "type": "Dog",
+    "breed": "Labrador Retriever and Mix",
+    "sex": "Male",
+    "weight_lbs": 76.4,
+    "age": {
+      "years": 3,
+      "months": 0
+    },
+    "location": {
+      "name": "Humane Society of Missouri - St. Louis City",
+      "lat": 38.626144,
+      "long": -90.276142
+    },
+    "adoption_fee": 100,
+    "intake_date": "02/10/2026",
+    "description": "Neutered, Black and White color.",
+    "image_path": "/images/A753202.jpeg"
+  },
+  {
+    "id": "A753542",
+    "name": "Winter",
+    "type": "Dog",
+    "breed": "Pit Bull Terrier and Mix",
+    "sex": "Female",
+    "weight_lbs": 41.6,
+    "age": {
+      "years": 0,
+      "months": 8
+    },
+    "location": {
+      "name": "Humane Society of Missouri - St. Louis City",
+      "lat": 38.626144,
+      "long": -90.276142
+    },
+    "adoption_fee": 100,
+    "intake_date": "02/08/2026",
+    "description": "Spayed, White and Black.",
+    "image_path": "/images/A753542.jpeg"
+  },
+  {
+    "id": "A753632",
+    "name": "Mallard",
+    "type": "",
+    "breed": "Black and Tan Coonhound and Mix",
+    "sex": "Female",
+    "weight_lbs": 42.5,
+    "age": {
+      "years": 3,
+      "months": 0
+    },
+    "location": {
+      "name": "Humane Society of Missouri - St. Louis City",
+      "lat": 38.626144,
+      "long": -90.276142
+    },
+    "adoption_fee": 100,
+    "intake_date": "02/12/2026",
+    "description": "Spayed,  Black and Brown.",
+    "image_path": "/images/A753632.jpeg"
+  },
+  {
+    "id": "A754294",
+    "name": "Huntress",
+    "type": "Dog",
+    "breed": "Pointer and Mix",
+    "sex": "Female",
+    "weight_lbs": 42,
+    "age": {
+      "years": 1,
+      "months": 0
+    },
+    "location": {
+      "name": "Humane Society of Missouri - St. Louis City",
+      "lat": 38.626144,
+      "long": -90.276142
+    },
+    "adoption_fee": 100,
+    "intake_date": "12/14/2026",
+    "description": "Spayed, White and Brown.",
+    "image_path": "/images/A754294.jpeg"
+  },
+  {
+    "id": "A754341",
+    "name": "Robot",
+    "type": "Dog",
+    "breed": "Labrador Retriever and Mix",
+    "sex": "Male",
+    "weight_lbs": 48,
+    "age": {
+      "years": 1,
+      "months": 2
+    },
+    "location": {
+      "name": "Humane Society of Missouri - St. Louis City",
+      "lat": 38.626144,
+      "long": -90.276142
+    },
+    "adoption_fee": 100,
+    "intake_date": "",
+    "description": "Neutered, Black and White.",
+    "image_path": "/images/A754341.jpeg"
+  },
+  {
+    "id": "A754349",
+    "name": "Fuego",
+    "type": "Dog",
+    "breed": "Pit Bull Terrier and Mix",
+    "sex": "Female",
+    "weight_lbs": 40.5,
+    "age": {
+      "years": 0,
+      "months": 8
+    },
+    "location": {
+      "name": "Humane Society of Missouri - St. Louis City",
+      "lat": 38.626144,
+      "long": -90.276142
+    },
+    "adoption_fee": 100,
+    "intake_date": "12/16/2026",
+    "description": "Spayed, Black and White.Who can resist this adorable face? Fuego is a happy, friendly pup who is learning that spending time with humans and doing zoomies is the best! She would do well with someone who can teach her basic commands, as she is still young, but she is a good-natured dog who is eager to learn. Come meet Fuego today!",
+    "image_path": "/images/A754349.jpeg"
+  },
+  {
+    "id": "A755230",
+    "name": "Kora",
+    "type": "Cat",
+    "breed": "Domestic Shorthair",
+    "sex": "Female",
+    "weight_lbs": 6.64,
+    "age": {
+      "years": 3,
+      "months": 0
+    },
+    "location": {
+      "name": "Humane Society of Missouri - Maryland Heights",
+      "lat": 38.700835,
+      "long": -90.428560
+    },
+    "adoption_fee": 100,
+    "intake_date": "01/16/2026",
+    "description": "Brown Tabby, spayed.",
+    "image_path": "/images/A755230.jpeg"
+  },
+  {
+    "id": "A755231",
+    "name": "Kenzi",
+    "type": "Cat",
+    "breed": "Domestic Shorthair",
+    "sex": "Female",
+    "weight_lbs": 5.3,
+    "age": {
+      "years": 2,
+      "months": 1
+    },
+    "location": {
+      "name": "Humane Society of Missouri - Maryland Heights",
+      "lat": 38.700835,
+      "long": -90.428560
+    },
+    "adoption_fee": 100,
+    "intake_date": "01/16/2026",
+    "description": "Black color, spayed.",
+    "image_path": "/images/A755231.jpeg"
   },
   {
     "id": "A746545",
@@ -651,24 +840,423 @@
     "image_path": "/images/A747660.jpeg"
   },
   {
-    "id": "",
-    "name": "",
-    "type": "",
-    "breed": "",
-    "sex": "",
-    "weight_lbs": ,
+    "id": "30304",
+    "name": "Buddy",
+    "type": "Dog",
+    "breed": "Mixed Breed (Medium)",
+    "sex": "Male",
+    "weight_lbs": 45,
     "age": {
-      "years": ,
-      "months": 
+      "years": 3,
+      "months": 0 
     },
     "location": {
-      "name": "Humane Society of Missouri - Maryland Heights",
-      "lat": 38.700835,
-      "long": -90.428560
+      "name": "Jefferson City Animal Shelter",
+      "lat": 38.577937,
+      "long": -92.212283
     },
-    "adoption_fee": ,
-    "intake_date": "",
-    "description": "",
-    "image_path": "/images/"
+    "adoption_fee": 100,
+    "intake_date": "Unknown",
+    "description": "Name: Buddy Age: 2-3 years old Breed: Mixed breed Gender: neutered male Current Weight: 45 lbs Estimated weight when grown: full grown House broke: Unknown Good with Dogs: Unknown, came in with other dogs Good with Cats: Unknown, came in with a cat Good with Children: Unknown Heartworm Test: negative Adoption Fee: $100 Misc. Information: Buddy was brought to the shelter with 2 other dogs and a cat after his owner was arrested. Unfortunately, his owner never came to get him so he is now looking for a new home. He is a super sweet boy who seems to know several basic commands and is ready to find a forever family. The shelter provides a 5-day health guarantee for adopted animals. This includes health conditions not present or known about by the shelter at the of adoption, which adopter becomes aware of within 5 days. Injuries or accidents that occur at the adopter's home are not covered. The shelter is not responsible for incurred costs from local veterinarians due to non-compliance. ALL adoptions are final! Animals can be returned to the shelter for any reason, however, there are NO refunds or exchanges.",
+    "image_path": "/images/30304.avif"
+  },
+{
+    "id": "30284",
+    "name": "Busby",
+    "type": "Dog",
+    "breed": "Mixed Breed (Medium)",
+    "sex": "Male",
+    "weight_lbs": 29,
+    "age": {
+      "years": 0,
+      "months": 5
+    },
+    "location": {
+      "name": "Jefferson City Animal Shelter",
+      "lat": 38.577937,
+      "long": -92.212283
+    },
+    "adoption_fee": 125,
+    "intake_date": "Unknown",
+    "description": "Name: Busby Age: 5-5.5 months old Breed: Mixed breed Gender: neuterd male Current Weight: 29 lbs Estimated weight when grown: 50-70 lbs House broke: Unknown Good with Dogs: Unknown Good with Cats: Unknown Good with Children: Unknown Heartworm Test: Too young to test Adoption Fee: $125.00 Misc. Information: Busby was brought to the shelter as a stray so little is known about him at this time. He has been a sweet boy who is really nervous here at the shelter. Let him come to you and do not back him into the corner of his kennel. Once out of the shelter envirnoment he may settle down more and not be so nervous. The shelter provides a 5-day health guarantee for adopted animals. This includes health conditions not present or known about by the shelter at the of adoption, which adopter becomes aware of within 5 days. Injuries or accidents that occur at the adopter's home are not covered. The shelter is not responsible for incurred costs from local veterinarians due to non-compliance. ALL adoptions are final! Animals can be returned to the shelter for any reason, however, there are NO refunds or exchanges.",
+    "image_path": "/images/30284.avif"
+  },
+  {
+    "id": "30331",
+    "name": "Chip",
+    "type": "Dog",
+    "breed": "Beagle/Mixed Breed (Medium)",
+    "sex": "Male",
+    "weight_lbs": 28.8,
+    "age": {
+      "years": 2,
+      "months": 0 
+    },
+    "location": {
+      "name": "Jefferson City Animal Shelter",
+      "lat": 38.577937,
+      "long": -92.212283
+    },
+    "adoption_fee": 100 ,
+    "intake_date": "Unknown",
+    "description": "Name: Chip Age: 1-2 years old Breed: Beagle mix Gender: neutered male Current Weight: 28.8 lbs Estimated weight when grown: full grown House broke: Unknown Good with Dogs: Unknown, came in with Tater Good with Cats: unknown Good with Children: Unknown Heartworm Test: negative Adoption Fee: $100 Misc. Information: Chip was brought to the shelter as a stray from the country. He was running with his brother Tater making new friends all over the country side. He is a super sweet boy who is a little nervous here at the shelter but we have no doubts once out of the shelter environment and in a good home he will be great! Please keep in mind that he is a hound mix and hounds tend to following their noses and can go great distances if they get a good scent. This may not be the case for this particular dog but it is something to also keep in mind when adopting hound dogs. The shelter provides a 5-day health guarantee for adopted animals. This includes health conditions not present or known about by the shelter at the of adoption, which adopter becomes aware of within 5 days. Injuries or accidents that occur at the adopter's home are not covered. The shelter is not responsible for incurred costs from local veterinarians due to non-compliance. ALL adoptions are final! Animals can be returned to the shelter for any reason, however, there are NO refunds or exchanges.",
+    "image_path": "/images/30331.avif"
+  },
+  {
+    "id": "30217",
+    "name": "Crimson",
+    "type": "Dog",
+    "breed": "Mixed Breed (Medium)",
+    "sex": "Female",
+    "weight_lbs": 33.3 ,
+    "age": {
+      "years": 5,
+      "months": 0 
+    },
+    "location": {
+      "name": "Jefferson City Animal Shelter",
+      "lat": 38.577937,
+      "long": -92.212283
+    },
+    "adoption_fee": 100 ,
+    "intake_date": "Unknown",
+    "description": "Name: Crimson Age: 4-5 years old Breed: Mixed breed Gender: spayed female Current Weight: 33.3 lbs Estimated weight when grown: full grown House broke: Unknown Good with Dogs: Unknown Good with Cats: Unknown Good with Children: Unknown Heartworm Test: negative Adoption Fee: $100 Misc. Information: Crimson was brought to the shelter after being dumped at the river access in town with her 5 puppies. She is a super sweet girl but can be nervous at times with some sounds and new things. She is more than likely going to require some time to adjust to being a house dog and could benefit from basic training. The shelter provides a 5-day health guarantee for adopted animals. This includes health conditions not present or known about by the shelter at the of adoption, which adopter becomes aware of within 5 days. Injuries or accidents that occur at the adopter's home are not covered. The shelter is not responsible for incurred costs from local veterinarians due to non-compliance. ALL adoptions are final! Animals can be returned to the shelter for any reason, however, there are NO refunds or exchanges.",
+    "image_path": "/images/30217.avif"
+  },
+  {
+    "id": "30348",
+    "name": "Dottie",
+    "type": "Cat",
+    "breed": "Domestic Shorthair",
+    "sex": "Female",
+    "weight_lbs": 8,
+    "age": {
+      "years": 2,
+      "months": 0
+    },
+    "location": {
+      "name": "Jefferson City Animal Shelter",
+      "lat": 38.577937,
+      "long": -92.212283
+    },
+    "adoption_fee": 50,
+    "intake_date": "Unknown",
+    "description": "Name: Dottie Age: 1-2 years old Breed: domestic short hair Gender: spayed female Good with Dogs: Unknown Good with Cats: Unknown Good with Children: Unknown Current weight: 8 lbs FeLv/FIV test: negative Adoption Fee: $50 Misc. Information: Dottie was brought to the shelter as a stray so little is known about her. She is a very sweet girl who is very nervous here at the shelter. Please go slow with her and give her space if she is not wanting attention (hissing, growling, moving away). She may require some time to adjust into a new home and giving her a small bedroom or bathroom verses the whole house would be ideal. The shelter provides a 5-day health guarantee for adopted animals. This includes health conditions not present or known about by the shelter at the of adoption, which adopter becomes aware of within 5 days. Injuries or accidents that occur at the adopter's home are not covered. The shelter is not responsible for incurred costs from local veterinarians due to non-compliance. ALL adoptions are final! Animals can be returned to the shelter for any reason, however, there are NO refunds or exchanges.",
+    "image_path": "/images/30348.avif"
+  },
+  {
+    "id": "30292",
+    "name": "Drezzy",
+    "type": "Dog",
+    "breed": "Mixed Breed (Medium)",
+    "sex": "Female",
+    "weight_lbs": 38,
+    "age": {
+      "years": 2,
+      "months": 0
+    },
+    "location": {
+      "name": "Jefferson City Animal Shelter",
+      "lat": 38.577937,
+      "long": -92.212283
+    },
+    "adoption_fee": 100,
+    "intake_date": "Unknown",
+    "description": "Name: Drezzy Age: 1-2 years old Breed: mixed breed Gender: spayed female Current Weight: 38 lbs Estimated weight when grown: full grown House broke: Yes Good with Dogs: Yes Good with Cats: Yes Good with Children: Has been around kids of all ages Heartworm Test: negative Adoption Fee: $100 Misc. Information: Drezzy was originally brought in with her sister Cassie as strays. Her owner later called and stated that the dogs were actually hers and that she could no longer keep them. She provided very little information, Drezzy is a very sweet girl who is good with cats, dogs, and children, but can be fairly shy around new people. Drezzy is very nervous here at the shelter but very sweet. Please go slow with her and give her space and allow her to come to you. The shelter provides a 5-day health guarantee for adopted animals. This includes health conditions not present or known about by the shelter at the of adoption, which adopter becomes aware of within 5 days. Injuries or accidents that occur at the adopter's home are not covered. The shelter is not responsible for incurred costs from local veterinarians due to non-compliance. ALL adoptions are final! Animals can be returned to the shelter for any reason, however, there are NO refunds or exchanges.",
+    "image_path": "/images/30292.avif"
+  },
+  {
+    "id": "30353",
+    "name": "Ducky",
+    "type": "Dog",
+    "breed": "Mixed Breed (Medium)",
+    "sex": "Male",
+    "weight_lbs": 50,
+    "age": {
+      "years": 3,
+      "months": 0
+    },
+    "location": {
+      "name": "Jefferson City Animal Shelter",
+      "lat": 38.577937,
+      "long": -92.212283
+    },
+    "adoption_fee": 100,
+    "intake_date": "Unknown",
+    "description": "Name: Ducky Age: 2-3 years old Breed: Mixed Breed Gender: neutered male Current Weight: 50 lbs Estimated weight when grown: full grown House broke: Unknown Good with Dogs: Unknown Good with Cats: Unknown Good with Children: Unknown Heartworm Test: negative Adoption Fee: $100 Misc. Information: Ducky was brought to the shelter as a stray so little is known about him at this time. He is a sweet boy who is a little nervous here at the shelter. Please go slow with him and let him come to you. Once out of the shelter environment he will more than likely be more relaxed and less shy. The shelter provides a 5-day health guarantee for adopted animals. This includes health conditions not present or known about by the shelter at the of adoption, which adopter becomes aware of within 5 days. Injuries or accidents that occur at the adopter's home are not covered. The shelter is not responsible for incurred costs from local veterinarians due to non-compliance. ALL adoptions are final! Animals can be returned to the shelter for any reason, however, there are NO refunds or exchanges.",
+    "image_path": "/images/30353.avif"
+  },
+  {
+    "id": "29778",
+    "name": "Duke",
+    "type": "Dog",
+    "breed": "Catahoula Leopard Dog/Mixed Breed (Large)",
+    "sex": "Male",
+    "weight_lbs": 66,
+    "age": {
+      "years": 4,
+      "months": 0
+    },
+    "location": {
+      "name": "Jefferson City Animal Shelter",
+      "lat": 38.577937,
+      "long": -92.212283
+    },
+    "adoption_fee": 100,
+    "intake_date": "Unknown",
+    "description": "Name: Duke Age: 3-4 years old Breed: Mixed breed Gender: neutered male Current Weight: 66 lbs Estimated weight when grown: full grown House broke: Mostly, has occasional accidents Good with Dogs: Yes Good with Cats: Yes Good with Children:Yes, all ages Heartworm Test: negative Adoption Fee: $100 Misc. Information: Duke was surrendered to the shelter due to owner no longer being able to care for him. He has been a nervous but sweet guy here at the shelter. Please go slow with him and give him soace if he is not wanting attention. Let him come to you. Duke is said to have been a farm dog and is use to being able to run. He was an indoor dog and use to being inside and is said to be mostly house broke with occasional accidents. He knows several commands and walks fairly well on the leash. Duke was just returned for not being house broke and chasing cattle. He would do best in a fenced yard and probably not living where there is livestock. Though it says he was use to being a farm dog, he was more than likely not monitored when outdoors and did what he wanted and when which is where the running and chasing livestock behavior may be coming from. As for the house training, he is going to require some time and patience while he fully learns the concept. Now that he has been neutered and those hormones should be out of his system he may catch on to it a little better. The shelter provides a 5-day health guarantee for adopted animals. This includes health conditions not present or known about by the shelter at the of adoption, which adopter becomes aware of within 5 days. Injuries or accidents that occur at the adopter's home are not covered. The shelter is not responsible for incurred costs from local veterinarians due to non-compliance. ALL adoptions are final! Animals can be returned to the shelter for any reason, however, there are NO refunds or exchanges.",
+    "image_path": "/images/29778.avif"
+  },
+  {
+    "id": "30336",
+    "name": "Jasmine",
+    "type": "Dog",
+    "breed": "American Pit Bull Terrier/Mixed Breed (Medium)",
+    "sex": "Female",
+    "weight_lbs": 35,
+    "age": {
+      "years": 2,
+      "months": 0
+    },
+    "location": {
+      "name": "Jefferson City Animal Shelter",
+      "lat": 38.577937,
+      "long": -92.212283
+    },
+    "adoption_fee": 100,
+    "intake_date": "Unknown",
+    "description": "Name: Jasmine Age: 1-2 years old Breed: Mixed breed Gender: spayed female Current Weight: 35 lbs Estimated weight when grown: 50-55 lbs House broke: Unknown, more than likely not Good with Dogs: Unknown Good with Cats: Unknown Good with Children: Unknown Heartworm Test: negative Adoption Fee: $100 Misc. Information: Jasmine was found as a stray and brought to the shelter. She was very skinny when she came in and still could stand to gain a few more pounds. She is a sweet girl who would greatly benefit from some basic training. She will need some leash walking skills and using a harnes verses a collar and leash will gretly benefit her. The shelter provides a 5-day health guarantee for adopted animals. This includes health conditions not present or known about by the shelter at the of adoption, which adopter becomes aware of within 5 days. Injuries or accidents that occur at the adopter's home are not covered. The shelter is not responsible for incurred costs from local veterinarians due to non-compliance. ALL adoptions are final! Animals can be returned to the shelter for any reason, however, there are NO refunds or exchanges.",
+    "image_path": "/images/30336.avif"
+  },
+  {
+    "id": "30240",
+    "name": "Maxine",
+    "type": "Dog",
+    "breed": "Mixed Breed (Medium)",
+    "sex": "Female",
+    "weight_lbs": 38,
+    "age": {
+      "years": 4,
+      "months": 0
+    },
+    "location": {
+      "name": "Jefferson City Animal Shelter",
+      "lat": 38.577937,
+      "long": -92.212283
+    },
+    "adoption_fee": 100,
+    "intake_date": "Unknown",
+    "description": "Name: Maxine Age: 3-4 years old Breed: mixed breed Gender: spayed female Current Weight: 38 lbs Estimated weight when grown: full grown House broke: Unknown Good with Dogs: Unknown Good with Cats: Unknown Good with Children:Unknown Heartworm Test: negative Adoption Fee: $100 Misc. Information: Maxine was brought to the shelter as a stray so little is known about her at this time. She has been a little nervous while here at the shelter but is a SUPER sweet girl. Once out of the shelter environment she will more than likely do just fine. The shelter provides a 5-day health guarantee for adopted animals. This includes health conditions not present or known about by the shelter at the of adoption, which adopter becomes aware of within 5 days. Injuries or accidents that occur at the adopter's home are not covered. The shelter is not responsible for incurred costs from local veterinarians due to non-compliance. ALL adoptions are final! Animals can be returned to the shelter for any reason, however, there are NO refunds or exchanges.",
+    "image_path": "/images/30240.avif"
+  },
+  {
+    "id": "30225",
+    "name": "Mia",
+    "type": "Dog",
+    "breed": "German Shepherd Dog/Mixed Breed (Medium)",
+    "sex": "Female",
+    "weight_lbs": 33,
+    "age": {
+      "years": 4,
+      "months": 0
+    },
+    "location": {
+      "name": "Jefferson City Animal Shelter",
+      "lat": 38.577937,
+      "long": -92.212283
+    },
+    "adoption_fee": 100,
+    "intake_date": "Unknown",
+    "description": "Name: Mia Age: 3-4 years old Breed: Mixed breed Gender: spayed female Current Weight: 33 lbs Estimated weight when grown: full grown House broke: Unknown Good with Dogs: Unknown Good with Cats: Unknown Good with Children: Unknown Heartworm Test: negative Adoption Fee: $100 Misc. Information: Mia was brought to the shelter as a stray with a microchip. Unfortuantely there were no good numbers for us to make contact with pervious owner. She is a very sweet girl and now ready for a new home. The shelter provides a 5-day health guarantee for adopted animals. This includes health conditions not present or known about by the shelter at the of adoption, which adopter becomes aware of within 5 days. Injuries or accidents that occur at the adopter's home are not covered. The shelter is not responsible for incurred costs from local veterinarians due to non-compliance. ALL adoptions are final! Animals can be returned to the shelter for any reason, however, there are NO refunds or exchanges.",
+    "image_path": "/images/30225.avif"
+  },
+  {
+    "id": "29807",
+    "name": "Milo",
+    "type": "Dog",
+    "breed": "Mixed Breed (Medium)",
+    "sex": "Male",
+    "weight_lbs": 55.6,
+    "age": {
+      "years": 5,
+      "months": 0
+    },
+    "location": {
+      "name": "Jefferson City Animal Shelter",
+      "lat": 38.577937,
+      "long": -92.212283
+    },
+    "adoption_fee": 100,
+    "intake_date": "Unknown",
+    "description": "Name: Milo Age: 4-5 years old Breed: Mixed Breed Gender: Neutered Male Current Weight: 55.6lbs Estimated weight when grown: Full Grown House broke: Yes Good with Dogs: Yes if properly introduced (will fight over certain things) Good with Cats: Never been around them Good with Children: Yes, (gets excited around young kids) Heartworm Test: Neg Adoption Fee: $100 Misc. Information: Milo was surrendered to the shelter because he gets very excited around children. He has been described as a very sweet and energetic boy who doesn’t quite realize his own size. It was noted that if Milo is outside and the fence isn’t tall enough, he may try to jump it and run off. Milo will need either a tall fence or a secure tie-out to help manange keeping him in the yard. He would do best in a home where he can get daily walks or in a home with much older children who can help him burn off some of that energy each day. Milo is extremely nervous here at the shelter, so please go slow with him. He may require some time to adjust into a new home, so please give him this time and be patient with him. The shelter provides a 5-day health guarantee for adopted animals. This includes health conditions not present or known about by the shelter at the of adoption, which adopter becomes aware of within 5 days. Injuries or accidents that occur at the adopter's home are not covered. The shelter is not responsible for incurred costs from local veterinarians due to non-compliance. ALL adoptions are final! Animals can be returned to the shelter for any reason, however, there are NO refunds or exchanges.",
+    "image_path": "/images/29807.avif"
+  },
+  {
+    "id": "30322",
+    "name": "Nylah",
+    "type": "Dog",
+    "breed": "German Shepherd",
+    "sex": "Female",
+    "weight_lbs": 75,
+    "age": {
+      "years": 7,
+      "months": 0
+    },
+    "location": {
+      "name": "Jefferson City Animal Shelter",
+      "lat": 38.577937,
+      "long": -92.212283
+    },
+    "adoption_fee": 100,
+    "intake_date": "Unknown",
+    "description": "Nylah was brought to the shelter by the sheriff department after being found running at large. She is a sweet girl who seems to be a little on the anxious side. We are unsure at this time if she is just anxious here at the shelter or if this is her normal personality. Shepherds can be somewhat on the anxioius side at times but once out of the shelter she may be more relaxed and definitely less stressed. She is a good girl otherwise who does also seem to know some basic commands.",
+    "image_path": "/images/30322.avif"
+  },
+  {
+    "id": "30323",
+    "name": "Nyx",
+    "type": "Dog",
+    "breed": "German Shepherd",
+    "sex": "Male",
+    "weight_lbs": 99,
+    "age": {
+      "years": 7,
+      "months": 0
+    },
+    "location": {
+      "name": "Jefferson City Animal Shelter",
+      "lat": 38.577937,
+      "long": -92.212283
+    },
+    "adoption_fee": 100,
+    "intake_date": "Unknown",
+    "description": "Nyx was borught to the shelter by the sheriff department after being found running at large. He is a super sweet boy who is a little nervous here at the shelter. He was great for his exam and cleaning of his hot spot on his back end. Unfortunately, Nyx may have allergies and need regular medication to help keep them under control and keep him from chewing himself raw. He seems to know some basic commands and ready to find a forever home.",
+    "image_path": "/images/30323.avif"
+  },
+  {
+    "id": "30362",
+    "name": "Oakley",
+    "type": "Dog",
+    "breed": "Mixed breed",
+    "sex": "Male",
+    "weight_lbs": 46.3,
+    "age": {
+      "years": 2,
+      "months": 0
+    },
+    "location": {
+      "name": "Jefferson City Animal Shelter",
+      "lat": 38.577937,
+      "long": -92.212283
+    },
+    "adoption_fee": 100,
+    "intake_date": "Unknown",
+    "description": "Oakley was brought to the shelter as a stray so little is known about him at this time. He has been a sweet boy while here at the shelter and now ready to find a forever family.     Oakley seems to have a lot of Australian Cattle dog (heeler) in him so please keep this in mind when adopting him as heelers tend to need jobs to do and things to keep them mentally stimulated.",
+    "image_path": "/images/30362.avif"
+  },
+  {
+    "id": "30193",
+    "name": "Ruger (prison)",
+    "type": "Dog",
+    "breed": "Treeing Walker Coonhound",
+    "sex": "Male",
+    "weight_lbs": 47,
+    "age": {
+      "years": 2,
+      "months": 0
+    },
+    "location": {
+      "name": "Jefferson City Animal Shelter",
+      "lat": 38.577937,
+      "long": -92.212283
+    },
+    "adoption_fee": 100,
+    "intake_date": "Unknown",
+    "description": "Ruger was brought to the shelter as a stray so little is known about him at this time. He is your typical hound dog and not a fan of being copped up in the shelter. He would do best in a home with a fenced yard and room to be a hound. He probably wouldn't be suitable for apartment or condo living where there is a shared roof as he does seem to be a barker, which is also a hound thing.     The Treeing Walker Coonhound is an energetic, intelligent, and friendly American scent hound known for its exceptional hunting skills, particularly for treed raccoons, boasting a distinctive baying voice and a tri-color coat. They are affectionate and calm at home but require significant daily exercise and consistent, positive training, thriving in active families who can meet their high energy and mental stimulation needs, with a lifespan of about 12-13 years.",
+    "image_path": "/images/30193.avif"
+  },
+  {
+    "id": "27094",
+    "name": "Sam",
+    "type": "Dog",
+    "breed": "Mixed Breed",
+    "sex": "Male",
+    "weight_lbs": 44.2,
+    "age": {
+      "years": 1,
+      "months": 0
+    },
+    "location": {
+      "name": "Jefferson City Animal Shelter",
+      "lat": 38.577937,
+      "long": -92.212283
+    },
+    "adoption_fee": 100,
+    "intake_date": "Unknown",
+    "description": "Sam was brought to the shelter as a stray with his brother Dean. His owner was contacted and signed them over to the shelter as they were no longer able to care for them. Him and his brother were adopted from the shelter as puppies last year. Sam is a very sweet and friendly boy who is now ready to find a forever home. He can be a little nervous at first so please go slow with him and give him space.     Sam went into a foster for a few weeks but unfortunately it just wasn't a good fit for him. He had a hard time getting along with the other dog in the home, mainly over food and would be destructive when left alone. Sam would greatly benefit from an active family who is able to walk or run him on the daily. He does well in a kennel and putting him in his kennel while away from home or unable to be with him is ideal, especially while he adjusts to a new home for the next few months. He is a GREAT dog who just needs the right person and family.",
+    "image_path": "/images/27094.avif"
+  },
+  {
+    "id": "18620",
+    "name": "Sarge",
+    "type": "Dog",
+    "breed": "Mixed Breed",
+    "sex": "Male",
+    "weight_lbs": 65,
+    "age": {
+      "years": 5,
+      "months": 0
+    },
+    "location": {
+      "name": "Jefferson City Animal Shelter",
+      "lat": 38.577937,
+      "long": -92.212283
+    },
+    "adoption_fee": 100,
+    "intake_date": "Unknown",
+    "description": "Sarge was brought in as a stray so little is known about him at this time.  He was adopted from the shelter in 2020 and is now ready to find a new family. He has been a very sweet and friendly boy while here at the shelter.",
+    "image_path": "/images/18620.avif"
+  },
+  {
+    "id": "30332",
+    "name": "Tater",
+    "type": "Dog",
+    "breed": "Beagle/Mixed Breed",
+    "sex": "Male",
+    "weight_lbs": 29.9,
+    "age": {
+      "years": 1,
+      "months": 0
+    },
+    "location": {
+      "name": "Jefferson City Animal Shelter",
+      "lat": 38.577937,
+      "long": -92.212283
+    },
+    "adoption_fee": 100,
+    "intake_date": "Unknown",
+    "description": "Tater was brought to the shelter as a stray from the country. Him and his brother Chip were running making friend all over the countryside. He is a sweet boy who is really nervous here at the shelter. He is a bit more reserved than his brother and may require a little more time to adjust and settle into a new home. He is a super sweet boy and with some time and patience we have no doubts that he'll be a wonderful companion for someone.     Please keep in mind that he is a hound mix and hounds tend to following their noses and can go great distances if they get a good scent. This may not be the case for this particular dog but it is something to also keep in mind when adopting hound dogs.",
+    "image_path": "/images/30332.avif"
+  },
+  {
+    "id": "30319",
+    "name": "Tundra",
+    "type": "Dog",
+    "breed": "American Pit Bull Terrier",
+    "sex": "Male",
+    "weight_lbs": 38,
+    "age": {
+      "years": 2,
+      "months": 0
+    },
+    "location": {
+      "name": "Jefferson City Animal Shelter",
+      "lat": 38.577937,
+      "long": -92.212283
+    },
+    "adoption_fee": 100,
+    "intake_date": "Unknown",
+    "description": "Tundra was brought to the shelter as a very skinny and stinky stray. He is a super sweet boy who is now ready to find a forever home. Here at the shelter he has been energetic and friendly.  He does still need to gain more weight to be at a healthy weight but in time and more TLC he will get back to a healthy weight and coat.",
+    "image_path": "/images/30319.avif"
   }
 ]
