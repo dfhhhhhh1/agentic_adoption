@@ -123,7 +123,7 @@ export function PetDetailModal({ pet, onClose, matchScore, reasoning }: PetDetai
               <div className="bg-white border-3 border-black rounded-xl p-5 shadow-neo-sm">
                 <h3 className="font-display font-bold text-lg mb-3">About {pet.name}</h3>
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  {pet.description || `${pet.name} is a wonderful ${pet.species.toLowerCase()} looking for a forever home!`}
+                  {pet.personality_description || `${pet.name} is a wonderful ${pet.species.toLowerCase()} looking for a forever home!`}
                 </p>
 
                 {pet.personality && pet.personality.length > 0 && (
@@ -148,7 +148,7 @@ export function PetDetailModal({ pet, onClose, matchScore, reasoning }: PetDetai
                     {pet.good_with_kids ? (
                       <CheckCircle2 className="w-5 h-5 text-green-600" />
                     ) : (
-                      <XCircle className="w-5 h-5 text-gray-300" />
+                      <XCircle className="w-5 h-5 text-red-300" />
                     )}
                     <span className="text-sm text-gray-700">Good with kids</span>
                   </div>
@@ -156,7 +156,7 @@ export function PetDetailModal({ pet, onClose, matchScore, reasoning }: PetDetai
                     {pet.good_with_dogs ? (
                       <CheckCircle2 className="w-5 h-5 text-green-600" />
                     ) : (
-                      <XCircle className="w-5 h-5 text-gray-300" />
+                      <XCircle className="w-5 h-5 text-red-300" />
                     )}
                     <span className="text-sm text-gray-700">Good with dogs</span>
                   </div>
@@ -164,7 +164,7 @@ export function PetDetailModal({ pet, onClose, matchScore, reasoning }: PetDetai
                     {pet.good_with_cats ? (
                       <CheckCircle2 className="w-5 h-5 text-green-600" />
                     ) : (
-                      <XCircle className="w-5 h-5 text-gray-300" />
+                      <XCircle className="w-5 h-5 text-red-300" />
                     )}
                     <span className="text-sm text-gray-700">Good with cats</span>
                   </div>

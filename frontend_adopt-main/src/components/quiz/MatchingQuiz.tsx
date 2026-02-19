@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { ChevronRight, ChevronLeft, Sparkles } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ChevronRight, ChevronLeft, Sparkles, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { QuizAnswers } from '../../lib/types';
 
@@ -10,47 +10,66 @@ interface MatchingQuizProps {
 
 const questions = [
   {
-    id: 'living_situation',
-    question: 'What is your living situation?',
-    options: ['Apartment', 'House with small yard', 'House with large yard', 'Farm/Rural'],
+    id: 'pet_preference',
+    question: 'What kind of pet are you hoping to adopt?',
+    options: [
+      { label: 'Dog', desc: 'Puppies, adults, or seniors' },
+      { label: 'Cat', desc: 'Kittens, adults, or seniors' },
+      { label: 'Small Animal', desc: 'Rabbits, Guinea Pigs, Hamsters' },
+      { label: 'Open to anything!', desc: 'Match me based on my lifestyle' }
+    ],
   },
   {
-    id: 'home_size',
-    question: 'How would you describe your home size?',
-    options: ['Small (Studio/1BR)', 'Medium (2-3BR)', 'Large (4+BR)', 'Very spacious'],
+    id: 'home_environment',
+    question: 'What best describes your home?',
+    options: [
+      { label: 'Apartment/Condo', desc: 'No private yard space' },
+      { label: 'House (Unfenced)', desc: 'Yard, but requires leash walking' },
+      { label: 'House (Fenced)', desc: 'Secure outdoor space to roam' },
+      { label: 'Rural / Acreage', desc: 'Lots of wide open space' }
+    ],
   },
   {
-    id: 'yard',
-    question: 'Do you have a yard?',
-    options: ['No yard', 'Small yard', 'Large yard', 'Multiple acres'],
+    id: 'alone_time',
+    question: 'How often will the pet be left completely alone?',
+    options: [
+      { label: 'Rarely', desc: 'Someone is usually home (WFH/Retired)' },
+      { label: 'Part-time', desc: 'Alone for 4-6 hours a day' },
+      { label: 'Full workday', desc: 'Alone for 8+ hours a day' },
+      { label: 'Varies widely', desc: 'Unpredictable schedule' }
+    ],
+  },
+  {
+    id: 'exercise_provision',
+    question: 'How much pet-focused exercise can you provide?',
+    options: [
+      { label: 'Low', desc: 'Short bathroom walks / indoor play' },
+      { label: 'Moderate', desc: 'Daily 30-60 min walks / active play' },
+      { label: 'High', desc: 'Long daily hikes, runs, or dog parks' },
+      { label: 'Very High', desc: 'Working breeds, agility, farm work' }
+    ],
   },
   {
     id: 'experience',
     question: 'What is your pet ownership experience?',
-    options: ['First-time owner', 'Some experience', 'Very experienced', 'Professional'],
-  },
-  {
-    id: 'activity_level',
-    question: 'How active are you?',
-    options: ['Low activity', 'Moderate activity', 'Very active', 'Extremely active'],
-  },
-  {
-    id: 'time_commitment',
-    question: 'How much time can you dedicate daily?',
-    options: ['Limited (1-2 hours)', 'Moderate (3-4 hours)', 'Plenty (5-6 hours)', 'Full-time'],
+    options: [
+      { label: 'First-time owner', desc: 'Never owned this type of pet' },
+      { label: 'Some experience', desc: 'Have owned pets in the past' },
+      { label: 'Very experienced', desc: 'Comfortable with training needs' },
+      { label: 'Expert', desc: 'Comfortable with behavioral/medical issues' }
+    ],
   },
   {
     id: 'other_pets',
-    question: 'Do you have other pets?',
-    options: ['No other pets', 'Have dogs', 'Have cats', 'Have multiple pets'],
+    question: 'Do you currently have other pets?',
+    options: ['No other pets', 'Yes, Dog(s)', 'Yes, Cat(s)', 'Yes, Multiple types'],
   },
   {
     id: 'children',
-    question: 'Do you have children?',
+    question: 'Are there children in the home?',
     options: ['No children', 'Young children (0-5)', 'School-age (6-12)', 'Teenagers (13+)'],
   },
 ];
-
 export function MatchingQuiz({ onComplete, onClose }: MatchingQuizProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -59,165 +78,147 @@ export function MatchingQuiz({ onComplete, onClose }: MatchingQuizProps) {
   const currentQuestion = questions[currentStep];
   const progress = ((currentStep + 1) / questions.length) * 100;
 
+  // Auto-advance logic
   const handleAnswer = (answer: string) => {
-    setAnswers({ ...answers, [currentQuestion.id]: answer });
-  };
-
-  const handleNext = () => {
+    setAnswers(prev => ({ ...prev, [currentQuestion.id]: answer }));
+    
+    // Small delay so user sees their selection before it slides away
     if (currentStep < questions.length - 1) {
-      setDirection(1);
-      setCurrentStep(currentStep + 1);
-    } else {
-      const query = buildQuery(answers);
-      onComplete(query);
+      setTimeout(() => {
+        setDirection(1);
+        setCurrentStep(prev => prev + 1);
+      }, 400);
     }
   };
 
-  const handleBack = () => {
-    if (currentStep > 0) {
-      setDirection(-1);
-      setCurrentStep(currentStep - 1);
-    }
+  const handleFinish = () => {
+    const query = buildQuery(answers);
+    onComplete(query);
   };
-
-  const buildQuery = (answers: Record<string, string>): string => {
-    const parts = [
-      `I live in ${answers.living_situation?.toLowerCase() || 'an apartment'}`,
-      `with ${answers.home_size?.toLowerCase() || 'limited space'}`,
-      `and ${answers.yard?.toLowerCase() || 'no yard'}.`,
-      `I am ${answers.experience?.toLowerCase() || 'a first-time owner'}`,
-      `with ${answers.activity_level?.toLowerCase() || 'moderate activity'}`,
-      `and can dedicate ${answers.time_commitment?.toLowerCase() || 'limited time'} to a pet.`,
-    ];
-
-    if (answers.other_pets !== 'No other pets') {
-      parts.push(`I ${answers.other_pets?.toLowerCase() || 'have other pets'}.`);
-    }
-
-    if (answers.children !== 'No children') {
-      parts.push(`I ${answers.children?.toLowerCase() || 'have children'}.`);
-    }
-
-    return parts.join(' ');
-  };
-
-  const slideVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 300 : -300,
-      opacity: 0,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-    },
-    exit: (direction: number) => ({
-      x: direction < 0 ? 300 : -300,
-      opacity: 0,
-    }),
+  const buildQuery = (ans: Record<string, string>): string => {
+    // Structured clear prompt for the LLM
+    return `
+      Act as an expert pet adoption counselor. Based on the following user profile, recommend 3 specific breeds or types of pets that would be a perfect match, and explain why.
+      
+      User Profile:
+      - Desired Pet: ${ans.pet_preference}
+      - Home Environment: ${ans.home_environment}
+      - Pet's Alone Time: ${ans.alone_time}
+      - Exercise/Activity Provided: ${ans.exercise_provision}
+      - Owner Experience Level: ${ans.experience}
+      - Household Context: Other pets: ${ans.other_pets} | Children: ${ans.children}
+      
+      Please include any potential challenges the user might face with your recommendations based on their lifestyle.
+    `.trim().replace(/\s+/g, ' '); // Keep the replace if you want it on one line, though LLMs handle line breaks perfectly fine!
   };
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        className="bg-white border-4 border-black rounded-2xl shadow-neo-lg max-w-2xl w-full overflow-hidden"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className="bg-white border-4 border-black rounded-3xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] max-w-2xl w-full overflow-hidden"
       >
-        <div className="bg-gradient-to-r from-sage-500 to-sage-600 px-6 py-4 border-b-4 border-black">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-6 h-6 text-white" />
-              <h2 className="text-xl font-display font-bold text-white">AI Matching Quiz</h2>
+        {/* Header */}
+        <div className="bg-sage-500 px-6 py-6 border-b-4 border-black relative">
+          <button 
+            onClick={onClose}
+            className="absolute top-4 right-4 p-1 hover:bg-black/10 rounded-full transition-colors"
+          >
+            <X className="w-6 h-6 text-white" />
+          </button>
+          
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-2 bg-white rounded-lg border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+              <Sparkles className="w-5 h-5 text-sage-600" />
             </div>
-            <button
-              onClick={onClose}
-              className="text-white hover:text-gray-200 text-sm font-medium"
-            >
-              Cancel
-            </button>
+            <h2 className="text-2xl font-black text-white uppercase tracking-tight">Matchmaker</h2>
           </div>
-          <div className="relative h-2 bg-sage-300 rounded-full overflow-hidden">
+
+          <div className="h-4 bg-black/20 rounded-full border-2 border-black overflow-hidden">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.3 }}
-              className="absolute inset-y-0 left-0 bg-white rounded-full"
+              className="h-full bg-white border-r-2 border-black"
             />
           </div>
-          <p className="text-sage-100 text-sm mt-2">
-            Question {currentStep + 1} of {questions.length}
-          </p>
         </div>
 
-        <div className="p-8 min-h-[400px] flex flex-col">
-          <AnimatePresence mode="wait" custom={direction}>
-            <motion.div
-              key={currentStep}
-              custom={direction}
-              variants={slideVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.3 }}
-              className="flex-1"
-            >
-              <h3 className="text-2xl font-display font-bold text-gray-900 mb-6">
-                {currentQuestion.question}
-              </h3>
+        <div className="p-8">
+          <div className="min-h-[320px]">
+            <AnimatePresence mode="wait" custom={direction}>
+              <motion.div
+                key={currentStep}
+                custom={direction}
+                initial={{ x: direction > 0 ? 50 : -50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: direction > 0 ? -50 : 50, opacity: 0 }}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
+              >
+                <span className="text-sage-600 font-bold text-sm uppercase tracking-widest">
+                  Step {currentStep + 1} of {questions.length}
+                </span>
+                <h3 className="text-3xl font-black text-black mt-2 mb-8 leading-tight">
+                  {currentQuestion.question}
+                </h3>
 
-              <div className="grid grid-cols-1 gap-3">
-                {currentQuestion.options.map((option) => (
-                  <button
-                    key={option}
-                    onClick={() => handleAnswer(option)}
-                    className={`
-                      p-4 rounded-xl border-3 transition-all text-left font-medium
-                      ${
-                        answers[currentQuestion.id] === option
-                          ? 'bg-sage-500 text-white border-black shadow-neo'
-                          : 'bg-white border-gray-300 hover:border-sage-300 hover:bg-sage-50'
-                      }
-                    `}
-                  >
-                    {option}
-                  </button>
-                ))}
-              </div>
-            </motion.div>
-          </AnimatePresence>
+                <div className="grid grid-cols-1 gap-4">
+                  {currentQuestion.options.map((option) => {
+                    const label = typeof option === 'string' ? option : option.label;
+                    const isSelected = answers[currentQuestion.id] === label;
+                    
+                    return (
+                      <button
+                        key={label}
+                        onClick={() => handleAnswer(label)}
+                        className={`
+                          group p-4 rounded-2xl border-4 transition-all text-left
+                          ${isSelected 
+                            ? 'bg-sage-500 border-black translate-x-1 translate-y-1 shadow-none' 
+                            : 'bg-white border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:bg-sage-50'
+                          }
+                        `}
+                      >
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <p className={`font-bold text-lg ${isSelected ? 'text-white' : 'text-black'}`}>
+                              {label}
+                            </p>
+                            {typeof option !== 'string' && (
+                              <p className={`text-sm ${isSelected ? 'text-sage-100' : 'text-gray-500'}`}>
+                                {option.desc}
+                              </p>
+                            )}
+                          </div>
+                          {isSelected && <Sparkles className="w-5 h-5 text-white" />}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
-          <div className="flex items-center justify-between mt-8 pt-6 border-t-2 border-gray-200">
+          {/* Navigation */}
+          <div className="flex items-center justify-between mt-10">
             <button
-              onClick={handleBack}
+              onClick={() => { setDirection(-1); setCurrentStep(s => s - 1); }}
               disabled={currentStep === 0}
-              className={`
-                px-6 py-3 rounded-lg border-2 border-black font-semibold flex items-center gap-2
-                ${
-                  currentStep === 0
-                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                    : 'bg-white hover:bg-gray-50 shadow-neo-sm hover:translate-x-1 hover:translate-y-1 hover:shadow-none'
-                }
-              `}
+              className="flex items-center gap-2 font-bold uppercase text-sm disabled:opacity-30"
             >
-              <ChevronLeft className="w-5 h-5" />
-              Back
+              <ChevronLeft className="w-5 h-5" /> Back
             </button>
 
-            <button
-              onClick={handleNext}
-              disabled={!answers[currentQuestion.id]}
-              className={`
-                px-6 py-3 rounded-lg border-2 border-black font-semibold flex items-center gap-2
-                ${
-                  answers[currentQuestion.id]
-                    ? 'bg-terracotta-500 text-white hover:bg-terracotta-600 shadow-neo-sm hover:translate-x-1 hover:translate-y-1 hover:shadow-none'
-                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                }
-              `}
-            >
-              {currentStep === questions.length - 1 ? 'Find Matches' : 'Next'}
-              <ChevronRight className="w-5 h-5" />
-            </button>
+            {currentStep === questions.length - 1 && (
+              <button
+                onClick={handleFinish}
+                disabled={!answers[currentQuestion.id]}
+                className="bg-orange-400 px-8 py-3 rounded-xl border-4 border-black font-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all"
+              >
+                Find My Match
+              </button>
+            )}
           </div>
         </div>
       </motion.div>

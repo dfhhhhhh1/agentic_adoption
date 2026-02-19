@@ -45,10 +45,10 @@ logger = structlog.get_logger(__name__)
 BATCH_SIZE = 3          # Pets per scoring call — keep small for local models
 MAX_WORKERS = 1         # Parallel Ollama calls (keep <= your GPU layers)
 SCORE_TIMEOUT = 50.0    # Per-batch timeout (seconds) — small prompt = fast
-EXPLAIN_TIMEOUT = 45.0  # Per-pet explanation timeout
+EXPLAIN_TIMEOUT = 30.0  # Per-pet explanation timeout
 LOW_CONFIDENCE_THRESHOLD = 0.55  # Trigger agent retry if best score < this
 MAX_AGENT_ROUNDS = 2    # How many times the agent may widen the search
-
+MAX_EXPLAIN = 5          # Only explain the top 5; fallback handles the rest
 # ── Prompts ───────────────────────────────────────────────────────────────────
 
 BATCH_SCORE_SYSTEM = """You are a pet adoption assistant. Score each pet for adoption fit.
@@ -62,7 +62,7 @@ Score 0.0 (terrible fit) to 1.0 (perfect fit). No other text."""
 EXPLAIN_SYSTEM = """You are a friendly pet adoption matchmaker.
 In 2-3 sentences explain why this specific pet suits (or doesn't suit) the adopter.
 Return ONLY a JSON object: {"explanation": "<your explanation here>"}
-Be specific — mention the pet's name, breed traits, energy level, and how they match the adopter's needs. No other text."""
+Be specific — mention the pet's name, traits, energy level, and how they match or dont match the adopter's needs. No other text."""
 
 
 # ── JSON helpers ──────────────────────────────────────────────────────────────
@@ -159,22 +159,25 @@ def _pet_minimal(pet: Pet) -> str:
 
 
 def _pet_full(pet: Pet) -> str:
-    """Full context for explanation prompts."""
     lines = [
         f"Name: {pet.name}",
         f"Breed: {pet.breed} | Age: {pet.age_text} | Size: {pet.size} | Sex: {pet.sex}",
         f"Energy: {pet.energy_level}",
     ]
-    if pet.good_with_dogs is not None:
-        lines.append(f"Good with dogs: {'Yes' if pet.good_with_dogs else 'No'}")
-    if pet.good_with_cats is not None:
-        lines.append(f"Good with cats: {'Yes' if pet.good_with_cats else 'No'}")
-    if pet.good_with_children is not None:
-        lines.append(f"Good with children: {'Yes' if pet.good_with_children else 'No'}")
-    if pet.house_trained is not None:
-        lines.append(f"House trained: {'Yes' if pet.house_trained else 'No'}")
     if pet.personality_description:
-        lines.append(f"Personality: {pet.personality_description}")
+        lines.append(f"Personality: {pet.personality_description[:200]}")
+    
+    # Add compatibility — small models need this explicitly
+    compat = []
+    if pet.good_with_dogs is not None:
+        compat.append(f"good with dogs: {'yes' if pet.good_with_dogs else 'no'}")
+    if pet.good_with_cats is not None:
+        compat.append(f"good with cats: {'yes' if pet.good_with_cats else 'no'}")
+    if pet.good_with_children is not None:
+        compat.append(f"good with children: {'yes' if pet.good_with_children else 'no'}")
+    if compat:
+        lines.append(f"Compatibility: {', '.join(compat)}")
+    
     return "\n".join(lines)
 
 
@@ -349,9 +352,9 @@ def _score_all_pets(user_query: str, pets: list[Pet], settings) -> tuple[dict[in
 # ── Explanations ──────────────────────────────────────────────────────────────
 
 def _explain_one(user_query: str, pet: Pet, settings) -> str:
-    """Generate a 1-2 sentence explanation for a single pet. Never raises."""
     prompt = (
-        f"Adopter wants: {user_query}\n\n"
+        f"The adopter is looking for: {user_query}\n\n"
+        f"You are explaining to the adopter why THIS PET is or isn't a good fit FOR THEM.\n"
         f"Pet details:\n{_pet_full(pet)}\n\n"
         f'Return: {{"explanation": "..."}}'
     )
@@ -453,7 +456,7 @@ def match_pets(query: MatchQuery) -> MatchResponse:
         species_filter = query.species_filter.value if query.species_filter else None
         candidates = pet_repo.vector_search(
             query_embedding=query_embedding,
-            top_k=query.max_results * 3,
+            top_k=query.max_results * 2,
             species_filter=species_filter,
         )
 
@@ -524,7 +527,8 @@ def match_pets(query: MatchQuery) -> MatchResponse:
         )
 
         # Step 6: Explain ALL returned matches
-        explanations = _explain_top_pets(query.query, top_pets, settings, explain_n=len(top_pets))
+        explanations = _explain_top_pets(query.query, top_pets, settings, explain_n=MAX_EXPLAIN)
+
 
         # Step 7: Build response with adaptive blending
         if llm_scored:

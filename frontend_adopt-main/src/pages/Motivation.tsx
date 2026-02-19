@@ -1,508 +1,653 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { MapPin, AlertTriangle, TrendingUp, BookOpen, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Heart,
+  Home,
+  AlertTriangle,
+  TrendingUp,
+  Users,
+  Shield,
+  ExternalLink,
+  ChevronDown,
+  ChevronUp,
+  PawPrint,
+  Siren,
+  Ban,
+  HandHeart,
+  Brain,
+  Undo2,
+  Building2,
+  DollarSign,
+  MapPin,
+} from 'lucide-react';
 
-interface RegionData {
-  title: string;
-  body: string;
+// ── Data ──────────────────────────────────────────────────────────────────────
+
+const HERO_STATS = [
+  { value: '94M', label: 'Pet Households', sub: '71% of all U.S. homes', icon: Home },
+  { value: '5.8M', label: 'Enter Shelters', sub: 'cats & dogs yearly', icon: AlertTriangle },
+  { value: '597K', label: 'Euthanized', sub: 'cats & dogs in 2025', icon: Ban },
+  { value: '6%', label: 'Would End It', sub: 'more adopters = no-kill USA', icon: Heart },
+];
+
+const SHELTER_FLOW = {
+  entering: { value: 5.8, label: 'Entering Shelters', unit: 'M' },
+  adopted: { value: 4.2, label: 'Adopted', unit: 'M' },
+  euthanized: { value: 0.597, label: 'Euthanized', unit: 'K', display: '597K' },
+  returned: { value: '7–20%', label: 'Returns After Adoption' },
+};
+
+const WHY_ENTER = [
+  { reason: 'Stray', pct: 60, color: 'bg-terracotta-400' },
+  { reason: 'Surrendered', pct: 29, color: 'bg-sage-500' },
+  { reason: 'Other', pct: 11, color: 'bg-gray-400' },
+];
+
+const ACQUISITION_DATA = {
+  dogs: [
+    { source: 'Breeders', pct: 34, color: 'bg-terracotta-500' },
+    { source: 'Shelters', pct: 23, color: 'bg-sage-500' },
+    { source: 'Friends/Family', pct: 20, color: 'bg-amber-400' },
+    { source: 'Stray', pct: 6, color: 'bg-gray-400' },
+  ],
+  cats: [
+    { source: 'Shelters', pct: 31, color: 'bg-sage-500' },
+    { source: 'Friends/Family', pct: 28, color: 'bg-amber-400' },
+    { source: 'Stray', pct: 27, color: 'bg-gray-400' },
+    { source: 'Breeders', pct: 3, color: 'bg-terracotta-500' },
+  ],
+};
+
+const MISSOURI_FACTS = [
+  {
+    icon: Siren,
+    title: '#1 in Puppy Mills',
+    description: 'Missouri leads the nation for 13+ consecutive years in abusive puppy mill operations.',
+    url: 'https://www.humaneworld.org/en/issue/horrible-hundred',
+    color: 'terracotta',
+  },
+  {
+    icon: Building2,
+    title: '500+ Shelters',
+    description: 'Operating statewide with varying levels of resources, data tracking, and no-kill progress.',
+    url: 'https://www.causeiq.com/directory/animal-shelters-list/missouri-state/',
+    color: 'sage',
+  },
+  {
+    icon: AlertTriangle,
+    title: 'Not No-Kill',
+    description: 'Missouri has not achieved no-kill status. Many shelters still struggle with overcrowding and limited resources.',
+    url: 'https://www.causeiq.com/directory/animal-shelters-list/missouri-state/',
+    color: 'terracotta',
+  },
+];
+
+const IMPACT_CARDS = [
+  {
+    icon: Heart,
+    title: 'Save Animal Lives',
+    stat: '597,000',
+    detail: 'euthanized in 2025',
+    url: 'https://www.shelteranimalscount.org/2025-report/',
+    gradient: 'from-terracotta-500 to-terracotta-600',
+  },
+  {
+    icon: DollarSign,
+    title: 'Reduce Shelter Costs',
+    stat: '$2B+',
+    detail: 'per year spent on sheltering',
+    url: 'https://www.petradar.org/en/articles/us-animal-shelter-facts-statistics',
+    gradient: 'from-sage-500 to-sage-600',
+  },
+  {
+    icon: Brain,
+    title: 'Improve Mental Health',
+    stat: '96%',
+    detail: 'say pets are family',
+    url: 'https://www.driveresearch.com/market-research-company-blog/pet-adoption-statistics/',
+    gradient: 'from-amber-500 to-amber-600',
+  },
+  {
+    icon: Undo2,
+    title: 'Prevent Returns',
+    stat: 'Up to 20%',
+    detail: 'returned after adoption',
+    url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC8783015/',
+    gradient: 'from-rose-500 to-rose-600',
+  },
+  {
+    icon: Users,
+    title: 'Strengthen Communities',
+    stat: '71%',
+    detail: 'of households own pets',
+    url: 'https://worldanimalfoundation.org/advocate/pet-ownership-statistics/',
+    gradient: 'from-blue-500 to-blue-600',
+  },
+  {
+    icon: Shield,
+    title: 'Fight Puppy Mills',
+    stat: '10,000+',
+    detail: 'estimated mills in USA',
+    url: 'https://www.humaneworld.org/en/puppy-mill-research',
+    gradient: 'from-purple-500 to-purple-600',
+  },
+];
+
+const SOURCES = [
+  { id: 1, text: 'APPA 2025 State of the Industry Report — 94M pet households, 71% of U.S. homes', url: 'https://worldanimalfoundation.org/advocate/pet-ownership-statistics/' },
+  { id: 2, text: 'Drive Research — 96% consider pets family members', url: 'https://www.driveresearch.com/market-research-company-blog/pet-adoption-statistics/' },
+  { id: 3, text: 'World Animal Foundation — Pet acquisition sources (shelters, breeders, strays)', url: 'https://worldanimalfoundation.org/advocate/pet-ownership-statistics/' },
+  { id: 4, text: 'ASPCA — Why animals enter shelters (stray 60%, surrender 29%)', url: 'https://www.aspca.org/helping-shelters-people-pets/us-animal-shelter-statistics' },
+  { id: 5, text: 'Shelter Animals Count 2025 — 5.8M entered, 4.2M adopted, 597K euthanized', url: 'https://www.shelteranimalscount.org/2025-report/' },
+  { id: 6, text: 'NIH / PMC — 7–20% adoption return rate', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC8783015/' },
+  { id: 7, text: 'Humane World — Missouri #1 in puppy mills 13+ years', url: 'https://www.humaneworld.org/en/issue/horrible-hundred' },
+  { id: 8, text: 'CauseIQ — 500+ Missouri shelters', url: 'https://www.causeiq.com/directory/animal-shelters-list/missouri-state/' },
+  { id: 9, text: 'Best Friends — 6% more adopters would achieve no-kill nationwide', url: 'https://bestfriends.org' },
+  { id: 10, text: 'PetRadar — $2B+ annual shelter spending', url: 'https://www.petradar.org/en/articles/us-animal-shelter-facts-statistics' },
+  { id: 11, text: 'Humane World — Estimated 10K+ puppy mills in USA', url: 'https://www.humaneworld.org/en/puppy-mill-research' },
+];
+
+// ── Helper Components ─────────────────────────────────────────────────────────
+
+function AnimatedBar({ pct, color, delay = 0 }: { pct: number; color: string; delay?: number }) {
+  return (
+    <motion.div
+      className={`h-full rounded-full ${color}`}
+      initial={{ width: 0 }}
+      whileInView={{ width: `${pct}%` }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8, delay, ease: 'easeOut' }}
+    />
+  );
 }
 
-interface RegionDataMap {
-  [key: string]: RegionData;
+function SectionTag({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-sage-100 text-sage-700 border-2 border-sage-300">
+      {children}
+    </span>
+  );
 }
 
-export function Motivation() {
-  const [activeRegion, setActiveRegion] = useState<string | null>(null);
-  const [showCities, setShowCities] = useState(true);
-  const [showMills, setShowMills] = useState(true);
-  const [showRegions, setShowRegions] = useState(true);
+// ── Funnel Visualization ──────────────────────────────────────────────────────
 
-  const regionData: RegionDataMap = {
-    nw: {
-      title: "Northwest Missouri",
-      body: "<strong>Status:</strong> Moderate risk. Mix of small rural shelters with limited resources. Low population density means fewer adopters and minimal spay/neuter access. Some counties have no dedicated animal shelter — strays are handled by county sheriff's office. <strong>Key need:</strong> Mobile spay/neuter clinics, transport networks to metro areas."
-    },
-    ne: {
-      title: "Northeast Missouri",
-      body: "<strong>Status:</strong> Moderate risk. Agricultural region with high stray intake and few adoption resources. Limited veterinary infrastructure. Some shelters operate on shoestring budgets with volunteer-only staff. <strong>Key need:</strong> Telehealth vet support, digital adoption platforms to connect with metro adopters."
-    },
-    kc: {
-      title: "Kansas City Metro",
-      body: "<strong>Status:</strong> Near no-kill. KC Pet Project achieved <strong>93.7% live-release rate</strong> in 2024 — up from 30% in 2008. Serves 509K residents, processes 40-60 animals daily across 14 locations. A national model for progressive sheltering. <strong>Challenge:</strong> Overcrowding crisis emerging in 2025 as intake outpaces outcomes. Cost of vet care rising."
-    },
-    central: {
-      title: "Central Missouri (Columbia/Jeff City)",
-      body: "<strong>Status:</strong> Moderate-good. Home to University of Missouri vet school, providing some resource advantage. Central MO Humane Society and local SPAYs serve the region. <strong>Challenge:</strong> Surrounding rural counties still lack affordable services. Shelter intake remains high from surrounding areas with no shelters."
-    },
-    stl: {
-      title: "St. Louis Metro",
-      body: "<strong>Status:</strong> Improving. St. Louis City went from <strong>58% euthanasia to 9%</strong> after partnering with Stray Rescue. Humane Society of Missouri is the state's largest shelter system. St. Louis County's new animal care center still working to improve save rates. <strong>Key strength:</strong> Strong rescue network and foster community."
-    },
-    sw: {
-      title: "Southwest Missouri (Joplin Area)",
-      body: "<strong>Status:</strong> HIGH CRISIS. The <strong>Hunte Corporation</strong> in Goodman, MO (SW corner) is the nation's largest puppy broker — handling ~90,000 puppies/year. SW Missouri is the hub of the puppy industry. Joplin-area shelters overwhelmed with surrendered mill dogs and strays. <strong>Key need:</strong> Enforcement, breeding regulation, rescue networks."
-    },
-    ozarks: {
-      title: "Ozarks Region (S-Central Missouri)",
-      body: "<strong>Status:</strong> CRITICAL. The <strong>highest concentration of puppy mills</strong> in the nation. Hills and hollows provide cover for operations evading inspection. In 2025, nearly 20 of Missouri's 26 Horrible Hundred mills are here — in Dora, West Plains, Wasola, Niangua, Cabool, Bolivar, Pleasant Hope, and more. Extremely limited spay/neuter access. <strong>Key need:</strong> Tech-driven mapping, inspection support, mass spay/neuter programs."
-    },
-    se: {
-      title: "Southeast Missouri (Bootheel)",
-      body: "<strong>Status:</strong> High risk. One of Missouri's poorest regions with very limited veterinary access. Cape Girardeau's SEMO Pets provides SNAP spay/neuter program but coverage is sparse across the vast rural Bootheel. High stray populations, minimal shelter infrastructure. <strong>Key need:</strong> Mobile clinics, community cat programs, transport to larger shelters."
-    }
-  };
-
-  const handleRegionClick = (region: string) => {
-    setActiveRegion(activeRegion === region ? null : region);
-  };
-
-  const stateData = [
-    { state: 'TX', name: 'Texas', gap: '~86K gap', width: '80%', color: 'bg-red-600' },
-    { state: 'CA', name: 'California', gap: '~62K gap', width: '65%', color: 'bg-red-500' },
-    { state: 'NC', name: 'N. Carolina', gap: '~35K gap', width: '42%', color: 'bg-amber-500' },
-    { state: 'FL', name: 'Florida', gap: '~29K gap', width: '35%', color: 'bg-amber-500' },
-    { state: 'LA', name: 'Louisiana', gap: '~23K gap', width: '28%', color: 'bg-amber-600' },
-    { state: 'MO', name: 'Missouri', gap: '~12K gap*', width: '18%', color: 'bg-terracotta-500' },
+function ShelterFunnel() {
+  const steps = [
+    { label: 'Enter Shelters', value: '5.8M', pct: 100, color: 'bg-terracotta-400', border: 'border-terracotta-500' },
+    { label: 'Adopted', value: '4.2M', pct: 72, color: 'bg-sage-400', border: 'border-sage-500' },
+    { label: 'Euthanized', value: '597K', pct: 10, color: 'bg-red-400', border: 'border-red-500' },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      {/* Noise texture overlay */}
-      <div className="fixed inset-0 opacity-[0.03] pointer-events-none z-0"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`
-        }}
-      />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
-        {/* Header */}
+    <div className="space-y-4">
+      {steps.map((step, i) => (
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          key={step.label}
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: i * 0.15 }}
+          className="flex items-center gap-4"
         >
-          <h1 className="text-5xl font-display font-bold mb-3 bg-gradient-to-r from-terracotta-400 to-amber-400 bg-clip-text text-transparent">
-            PawMatch AI — Missouri Geographic Mapping
-          </h1>
-          <p className="text-gray-300 max-w-3xl mx-auto text-base leading-relaxed">
-            Missouri faces a <strong className="text-white">12,000-animal shelter gap</strong> and leads the nation in puppy mills. Rural regions lack veterinary care, while metros approach no-kill. <strong className="text-white">PawMatch AI</strong> can bridge these divides — connecting adopters, shelters, and resources across geography.
-          </p>
+          <div className="w-24 text-right">
+            <p className="font-display font-bold text-xl text-gray-900">{step.value}</p>
+          </div>
+          <div className="flex-1">
+            <div className="h-10 bg-gray-100 rounded-lg border-2 border-gray-200 overflow-hidden">
+              <motion.div
+                className={`h-full ${step.color} rounded-lg border-r-2 ${step.border} flex items-center justify-end pr-3`}
+                initial={{ width: 0 }}
+                whileInView={{ width: `${step.pct}%` }}
+                viewport={{ once: true }}
+                transition={{ duration: 1, delay: i * 0.2, ease: 'easeOut' }}
+              >
+                <span className="text-xs font-bold text-white drop-shadow-sm">{step.label}</span>
+              </motion.div>
+            </div>
+          </div>
         </motion.div>
-
-        {/* Map and Sidebar Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr,380px] gap-7 mb-10">
-          {/* Map Panel */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-gray-800 border border-gray-700 rounded-2xl p-6 relative overflow-hidden"
-          >
-            {/* Orange glow effect */}
-            <div className="absolute -top-20 -left-20 w-48 h-48 bg-terracotta-500/20 rounded-full blur-3xl pointer-events-none" />
-
-            <div className="relative z-10">
-              <h2 className="font-display text-2xl text-white mb-4 flex items-center gap-2">
-                <MapPin className="w-6 h-6" />
-                Missouri Regions
-              </h2>
-
-              {/* Layer Controls */}
-              <div className="flex flex-wrap gap-2 mb-4">
-                <button
-                  onClick={() => setShowRegions(!showRegions)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold border-2 border-black transition-all ${
-                    showRegions
-                      ? 'bg-sage-500 text-white shadow-neo-sm'
-                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                  }`}
-                >
-                  Regions
-                </button>
-                <button
-                  onClick={() => setShowCities(!showCities)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold border-2 border-black transition-all ${
-                    showCities
-                      ? 'bg-sage-500 text-white shadow-neo-sm'
-                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                  }`}
-                >
-                  Cities
-                </button>
-                <button
-                  onClick={() => setShowMills(!showMills)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold border-2 border-black transition-all ${
-                    showMills
-                      ? 'bg-red-500 text-white shadow-neo-sm'
-                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                  }`}
-                >
-                  Puppy Mills
-                </button>
-              </div>
-
-              {/* SVG Map */}
-              <div className="relative w-full">
-                <svg viewBox="0 0 800 600" className="w-full h-auto">
-                  {/* Regions */}
-                  <g style={{ opacity: showRegions ? 1 : 0.3, transition: 'opacity 0.3s' }}>
-                    {/* Northwest */}
-                    <path
-                      data-region="nw"
-                      onClick={() => handleRegionClick('nw')}
-                      className={`cursor-pointer transition-all duration-300 ${
-                        activeRegion === 'nw' ? 'brightness-140' : 'hover:brightness-130'
-                      }`}
-                      fill="#1B5E3A"
-                      stroke={activeRegion === 'nw' ? '#E8763A' : '#2A2E3E'}
-                      strokeWidth={activeRegion === 'nw' ? '2.5' : '1'}
-                      d="M 50,50 L 300,50 L 300,200 L 50,200 Z"
-                    />
-                    {/* Northeast */}
-                    <path
-                      data-region="ne"
-                      onClick={() => handleRegionClick('ne')}
-                      className={`cursor-pointer transition-all duration-300 ${
-                        activeRegion === 'ne' ? 'brightness-140' : 'hover:brightness-130'
-                      }`}
-                      fill="#1A5048"
-                      stroke={activeRegion === 'ne' ? '#E8763A' : '#2A2E3E'}
-                      strokeWidth={activeRegion === 'ne' ? '2.5' : '1'}
-                      d="M 500,50 L 750,50 L 750,200 L 500,200 Z"
-                    />
-                    {/* Kansas City */}
-                    <path
-                      data-region="kc"
-                      onClick={() => handleRegionClick('kc')}
-                      className={`cursor-pointer transition-all duration-300 ${
-                        activeRegion === 'kc' ? 'brightness-140' : 'hover:brightness-130'
-                      }`}
-                      fill="#0D9488"
-                      stroke={activeRegion === 'kc' ? '#E8763A' : '#2A2E3E'}
-                      strokeWidth={activeRegion === 'kc' ? '2.5' : '1'}
-                      d="M 300,50 L 500,50 L 500,200 L 300,200 Z"
-                    />
-                    {/* Central */}
-                    <path
-                      data-region="central"
-                      onClick={() => handleRegionClick('central')}
-                      className={`cursor-pointer transition-all duration-300 ${
-                        activeRegion === 'central' ? 'brightness-140' : 'hover:brightness-130'
-                      }`}
-                      fill="#2D5A27"
-                      stroke={activeRegion === 'central' ? '#E8763A' : '#2A2E3E'}
-                      strokeWidth={activeRegion === 'central' ? '2.5' : '1'}
-                      d="M 200,200 L 550,200 L 550,350 L 200,350 Z"
-                    />
-                    {/* St. Louis */}
-                    <path
-                      data-region="stl"
-                      onClick={() => handleRegionClick('stl')}
-                      className={`cursor-pointer transition-all duration-300 ${
-                        activeRegion === 'stl' ? 'brightness-140' : 'hover:brightness-130'
-                      }`}
-                      fill="#155E75"
-                      stroke={activeRegion === 'stl' ? '#E8763A' : '#2A2E3E'}
-                      strokeWidth={activeRegion === 'stl' ? '2.5' : '1'}
-                      d="M 550,200 L 750,200 L 750,400 L 550,400 Z"
-                    />
-                    {/* Southwest */}
-                    <path
-                      data-region="sw"
-                      onClick={() => handleRegionClick('sw')}
-                      className={`cursor-pointer transition-all duration-300 ${
-                        activeRegion === 'sw' ? 'brightness-140' : 'hover:brightness-130'
-                      }`}
-                      fill="#991B1B"
-                      stroke={activeRegion === 'sw' ? '#E8763A' : '#2A2E3E'}
-                      strokeWidth={activeRegion === 'sw' ? '2.5' : '1'}
-                      d="M 50,350 L 200,350 L 200,550 L 50,550 Z"
-                    />
-                    {/* Ozarks */}
-                    <path
-                      data-region="ozarks"
-                      onClick={() => handleRegionClick('ozarks')}
-                      className={`cursor-pointer transition-all duration-300 ${
-                        activeRegion === 'ozarks' ? 'brightness-140' : 'hover:brightness-130'
-                      }`}
-                      fill="#7F1D1D"
-                      stroke={activeRegion === 'ozarks' ? '#E8763A' : '#2A2E3E'}
-                      strokeWidth={activeRegion === 'ozarks' ? '2.5' : '1'}
-                      d="M 200,350 L 550,350 L 550,550 L 200,550 Z"
-                    />
-                    {/* Southeast */}
-                    <path
-                      data-region="se"
-                      onClick={() => handleRegionClick('se')}
-                      className={`cursor-pointer transition-all duration-300 ${
-                        activeRegion === 'se' ? 'brightness-140' : 'hover:brightness-130'
-                      }`}
-                      fill="#92400E"
-                      stroke={activeRegion === 'se' ? '#E8763A' : '#2A2E3E'}
-                      strokeWidth={activeRegion === 'se' ? '2.5' : '1'}
-                      d="M 550,400 L 750,400 L 750,550 L 550,550 Z"
-                    />
-                  </g>
-
-                  {/* Cities */}
-                  {showCities && (
-                    <g>
-                      <circle cx="380" cy="125" r="5" fill="#E8763A" stroke="white" strokeWidth="1.5" className="cursor-pointer hover:r-7 transition-all" />
-                      <text x="380" y="145" fill="white" fontSize="9" fontWeight="600" textAnchor="middle">Kansas City</text>
-                      
-                      <circle cx="665" cy="290" r="5" fill="#E8763A" stroke="white" strokeWidth="1.5" className="cursor-pointer hover:r-7 transition-all" />
-                      <text x="665" y="310" fill="white" fontSize="9" fontWeight="600" textAnchor="middle">St. Louis</text>
-                      
-                      <circle cx="375" cy="275" r="4" fill="#E8763A" stroke="white" strokeWidth="1.5" className="cursor-pointer hover:r-7 transition-all" />
-                      <text x="375" y="292" fill="white" fontSize="8" fontWeight="600" textAnchor="middle">Columbia</text>
-                      
-                      <circle cx="150" cy="435" r="4" fill="#E8763A" stroke="white" strokeWidth="1.5" className="cursor-pointer hover:r-7 transition-all" />
-                      <text x="150" y="452" fill="white" fontSize="8" fontWeight="600" textAnchor="middle">Joplin</text>
-                      
-                      <circle cx="375" cy="460" r="4" fill="#E8763A" stroke="white" strokeWidth="1.5" className="cursor-pointer hover:r-7 transition-all" />
-                      <text x="375" y="477" fill="white" fontSize="8" fontWeight="600" textAnchor="middle">Springfield</text>
-                    </g>
-                  )}
-
-                  {/* Puppy Mills */}
-                  {showMills && (
-                    <g>
-                      <circle cx="130" cy="490" r="3.5" fill="#EF4444" opacity="0.7" className="cursor-pointer hover:opacity-100 hover:r-5 transition-all" />
-                      <circle cx="340" cy="490" r="3.5" fill="#EF4444" opacity="0.7" className="cursor-pointer hover:opacity-100 hover:r-5 transition-all" />
-                      <circle cx="390" cy="480" r="3.5" fill="#EF4444" opacity="0.7" className="cursor-pointer hover:opacity-100 hover:r-5 transition-all" />
-                      <circle cx="310" cy="470" r="3.5" fill="#EF4444" opacity="0.7" className="cursor-pointer hover:opacity-100 hover:r-5 transition-all" />
-                      <circle cx="280" cy="450" r="3.5" fill="#EF4444" opacity="0.7" className="cursor-pointer hover:opacity-100 hover:r-5 transition-all" />
-                      <circle cx="420" cy="460" r="3.5" fill="#EF4444" opacity="0.7" className="cursor-pointer hover:opacity-100 hover:r-5 transition-all" />
-                      <circle cx="360" cy="430" r="3.5" fill="#EF4444" opacity="0.7" className="cursor-pointer hover:opacity-100 hover:r-5 transition-all" />
-                      <circle cx="150" cy="460" r="3.5" fill="#EF4444" opacity="0.7" className="cursor-pointer hover:opacity-100 hover:r-5 transition-all" />
-                      <circle cx="180" cy="485" r="3.5" fill="#EF4444" opacity="0.7" className="cursor-pointer hover:opacity-100 hover:r-5 transition-all" />
-                      <circle cx="250" cy="500" r="3.5" fill="#EF4444" opacity="0.7" className="cursor-pointer hover:opacity-100 hover:r-5 transition-all" />
-                    </g>
-                  )}
-                </svg>
-              </div>
-
-              {/* Legend */}
-              <div className="flex flex-wrap gap-3 mt-4 pt-4 border-t border-gray-700">
-                <div className="flex items-center gap-2 text-xs text-gray-400">
-                  <div className="w-3 h-3 rounded-full bg-terracotta-500" />
-                  <span>Cities</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-gray-400">
-                  <div className="w-3 h-3 rounded-full bg-red-500" />
-                  <span>Puppy Mills</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-gray-400">
-                  <div className="w-3 h-3 rounded-full bg-teal-600" />
-                  <span>No-Kill</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-gray-400">
-                  <div className="w-3 h-3 rounded-full bg-green-800" />
-                  <span>Moderate</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-gray-400">
-                  <div className="w-3 h-3 rounded-full bg-red-900" />
-                  <span>Crisis</span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Sidebar */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-            className="flex flex-col gap-4"
-          >
-            {/* Stats Cards */}
-            <div className="bg-gray-800 border border-gray-700 rounded-xl p-5 hover:border-terracotta-500/30 transition-all">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-9 h-9 rounded-lg bg-terracotta-500/15 flex items-center justify-center">
-                  <TrendingUp className="w-5 h-5 text-terracotta-400" />
-                </div>
-                <div>
-                  <div className="text-xs text-gray-400">Shelter Gap</div>
-                  <div className="font-display text-2xl text-white">12,000+</div>
-                </div>
-              </div>
-              <p className="text-xs text-gray-400 leading-relaxed">
-                Missouri needs to save <strong className="text-white">12,000 more animals/year</strong> to reach no-kill (90%+ save rate). Currently at ~82% statewide.
-              </p>
-            </div>
-
-            <div className="bg-gray-800 border border-gray-700 rounded-xl p-5 hover:border-terracotta-500/30 transition-all">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-9 h-9 rounded-lg bg-red-500/15 flex items-center justify-center">
-                  <AlertTriangle className="w-5 h-5 text-red-400" />
-                </div>
-                <div>
-                  <div className="text-xs text-gray-400">Puppy Mills</div>
-                  <div className="font-display text-2xl text-white">#1 State</div>
-                </div>
-              </div>
-              <p className="text-xs text-gray-400 leading-relaxed">
-                Missouri leads the nation for <strong className="text-white">13 consecutive years</strong> in HSUS's "Horrible Hundred" report. 26 of 100 worst mills (2025) are in Missouri.
-              </p>
-            </div>
-
-            <div className="bg-gray-800 border border-gray-700 rounded-xl p-5 hover:border-terracotta-500/30 transition-all">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-9 h-9 rounded-lg bg-teal-500/15 flex items-center justify-center">
-                  <MapPin className="w-5 h-5 text-teal-400" />
-                </div>
-                <div>
-                  <div className="text-xs text-gray-400">Geographic Divide</div>
-                  <div className="font-display text-2xl text-white">5×</div>
-                </div>
-              </div>
-              <p className="text-xs text-gray-400 leading-relaxed">
-                Rural euthanasia rates are <strong className="text-white">5× higher</strong> than metro areas. KC and STL near no-kill, while Ozarks face crisis-level conditions.
-              </p>
-            </div>
-
-            <div className="bg-gray-800 border border-gray-700 rounded-xl p-5 hover:border-terracotta-500/30 transition-all">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-9 h-9 rounded-lg bg-amber-500/15 flex items-center justify-center">
-                  <BookOpen className="w-5 h-5 text-amber-400" />
-                </div>
-                <div>
-                  <div className="text-xs text-gray-400">Vet Shortage</div>
-                  <div className="font-display text-2xl text-white">73%</div>
-                </div>
-              </div>
-              <p className="text-xs text-gray-400 leading-relaxed">
-                <strong className="text-white">73%</strong> of shelters report vet shortages. <strong className="text-white">91%</strong> have spay/neuter backlogs. <strong className="text-white">53%</strong> of shelter vets considering leaving within 3 years.
-              </p>
-            </div>
-          </motion.div>
+      ))}
+      <div className="flex items-center gap-4">
+        <div className="w-24 text-right">
+          <p className="font-display font-bold text-lg text-gray-600">7–20%</p>
         </div>
-
-        {/* Region Detail Modal */}
-        {activeRegion && regionData[activeRegion] && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-            onClick={() => setActiveRegion(null)}
-          >
-            <div
-              className="bg-gray-800 border-3 border-terracotta-500 rounded-2xl p-6 max-w-2xl w-full shadow-neo-lg"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <h3 className="font-display text-2xl text-white">{regionData[activeRegion].title}</h3>
-                <button
-                  onClick={() => setActiveRegion(null)}
-                  className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
-                >
-                  <X className="w-5 h-5 text-gray-400" />
-                </button>
-              </div>
-              <div
-                className="text-sm text-gray-300 leading-relaxed [&>strong]:text-white [&>strong]:font-semibold"
-                dangerouslySetInnerHTML={{ __html: regionData[activeRegion].body }}
-              />
-            </div>
-          </motion.div>
-        )}
-
-        {/* National Context Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-7 mb-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="bg-gray-800 border border-gray-700 rounded-2xl p-6"
-          >
-            <h3 className="font-display text-xl text-white mb-2">📊 Top States: Share of National Euthanasia</h3>
-            <p className="text-sm text-gray-400 mb-4">
-              Five states account for <strong className="text-white">44–52%</strong> of all shelter euthanasia nationally. Missouri is not in the top 5, but its rural areas and puppy mill legacy create concentrated crisis zones.
-            </p>
-
-            <div className="space-y-3">
-              {stateData.map((state, index) => (
-                <motion.div
-                  key={state.state}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.4 + index * 0.05 }}
-                  className="flex items-center gap-3"
-                >
-                  <span className="text-white font-bold text-sm w-8">{state.state}</span>
-                  <div className="flex-1 h-8 bg-gray-700 rounded-lg overflow-hidden border border-gray-600">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: state.width }}
-                      transition={{ delay: 0.6 + index * 0.05, duration: 0.8, ease: 'easeOut' }}
-                      className={`h-full ${state.color} flex items-center px-3`}
-                    >
-                      <span className="text-white text-xs font-semibold">{state.name}</span>
-                    </motion.div>
-                  </div>
-                  <span className="text-gray-400 text-xs w-20 text-right">{state.gap}</span>
-                </motion.div>
-              ))}
-            </div>
-
-            <p className="text-xs text-gray-500 mt-4">
-              * Missouri's gap is concentrated in rural/Ozark regions. Metro KC and STL shelter near no-kill.
-              <br />Source: Best Friends Animal Society 2024 Lifesaving Data; Newsweek analysis, April 2025.
-            </p>
-          </motion.div>
-
-          {/* Data Sources */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35 }}
-            className="bg-gray-800 border border-gray-700 rounded-2xl p-6"
-          >
-            <h3 className="font-display text-xl text-white mb-4">📚 Data Sources & References</h3>
-            <ul className="space-y-2 text-xs text-gray-400 leading-relaxed">
-              <li>
-                <strong className="text-white">Best Friends Animal Society</strong> — 2024 National Dataset & Missouri Dashboard. Save rates, no-kill status, shelter counts.{' '}
-                <a href="https://bestfriends.org/no-kill/animal-shelter-statistics/missouri" target="_blank" rel="noopener noreferrer" className="text-terracotta-400 hover:text-terracotta-300 underline">
-                  bestfriends.org/missouri
-                </a>
-              </li>
-              <li>
-                <strong className="text-white">HSUS "Horrible Hundred"</strong> — 2024 & 2025 Reports. Missouri #1 for 13 consecutive years, 26 of 100 mills in MO (2025).{' '}
-                <a href="https://www.humaneworld.org/en/horrible-hundred" target="_blank" rel="noopener noreferrer" className="text-terracotta-400 hover:text-terracotta-300 underline">
-                  humaneworld.org
-                </a>
-              </li>
-              <li>
-                <strong className="text-white">ASPCA</strong> — MO has 3,000+ commercial breeding facilities (20%+ of nationwide). Exports 40%+ of pet store puppies.{' '}
-                <a href="https://aspca.org" target="_blank" rel="noopener noreferrer" className="text-terracotta-400 hover:text-terracotta-300 underline">
-                  aspca.org
-                </a>
-              </li>
-              <li>
-                <strong className="text-white">Shelter Animals Count</strong> — 2024 State-Level Data. Intake, adoptions, euthanasia by state.{' '}
-                <a href="https://shelteranimalscount.org/state-level-data/" target="_blank" rel="noopener noreferrer" className="text-terracotta-400 hover:text-terracotta-300 underline">
-                  shelteranimalscount.org
-                </a>
-              </li>
-              <li>
-                <strong className="text-white">KC Pet Project</strong> — 93.7% live-release rate (2024). Serves 16,000+ animals/year.{' '}
-                <a href="https://kcpetproject.org/about/no-kill/" target="_blank" rel="noopener noreferrer" className="text-terracotta-400 hover:text-terracotta-300 underline">
-                  kcpetproject.org
-                </a>
-              </li>
-              <li>
-                <strong className="text-white">Univ. of Florida Shelter Medicine</strong> — Rural vs urban disparities: rural euthanasia 5× higher; intake 2.6× higher per capita.{' '}
-                <a href="https://sheltermedicine.vetmed.ufl.edu" target="_blank" rel="noopener noreferrer" className="text-terracotta-400 hover:text-terracotta-300 underline">
-                  sheltermedicine.vetmed.ufl.edu
-                </a>
-              </li>
-              <li>
-                <strong className="text-white">Petco Love / UF Study</strong> — 73% of shelters short-staffed for vets; 91% have spay/neuter backlogs. Shortage projected 10+ more years.
-              </li>
-            </ul>
-          </motion.div>
+        <div className="flex-1">
+          <div className="h-8 bg-amber-50 rounded-lg border-2 border-dashed border-amber-300 flex items-center px-3">
+            <span className="text-xs font-bold text-amber-700">↩ Returned after adoption</span>
+          </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+// ── Acquisition Comparison ────────────────────────────────────────────────────
+
+function AcquisitionChart() {
+  const [species, setSpecies] = useState<'dogs' | 'cats'>('dogs');
+  const data = ACQUISITION_DATA[species];
+
+  return (
+    <div>
+      <div className="flex gap-2 mb-5">
+        {(['dogs', 'cats'] as const).map((s) => (
+          <button
+            key={s}
+            onClick={() => setSpecies(s)}
+            className={`px-4 py-2 rounded-lg border-2 border-black font-bold text-sm transition-all ${
+              species === s
+                ? 'bg-sage-500 text-white shadow-neo-sm'
+                : 'bg-white text-gray-700 hover:bg-sage-50'
+            }`}
+          >
+            {s === 'dogs' ? '🐕 Dogs' : '🐈 Cats'}
+          </button>
+        ))}
+      </div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={species}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          className="space-y-3"
+        >
+          {data.map((item, i) => (
+            <div key={item.source} className="flex items-center gap-3">
+              <span className="w-28 text-sm font-medium text-gray-700 text-right">{item.source}</span>
+              <div className="flex-1 h-8 bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-200">
+                <AnimatedBar pct={item.pct * (100 / 40)} color={item.color} delay={i * 0.1} />
+              </div>
+              <span className="w-10 text-sm font-bold text-gray-900">{item.pct}%</span>
+            </div>
+          ))}
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// ── Main Page ─────────────────────────────────────────────────────────────────
+
+export function Motivation() {
+  const [sourcesOpen, setSourcesOpen] = useState(false);
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* ── Hero ─────────────────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-sage-800 via-sage-700 to-sage-900 text-white">
+        {/* Decorative grid */}
+        <div className="absolute inset-0 opacity-10">
+          <div
+            className="w-full h-full"
+            style={{
+              backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
+              backgroundSize: '32px 32px',
+            }}
+          />
+        </div>
+        {/* Decorative blob */}
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-terracotta-500 rounded-full opacity-10 blur-3xl" />
+        <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-sage-300 rounded-full opacity-10 blur-3xl" />
+
+        <div className="relative max-w-6xl mx-auto px-4 pt-24 pb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-14"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm text-sm font-medium mb-6">
+              <PawPrint className="w-4 h-4" />
+              Why This Matters
+            </div>
+            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4">
+              Millions Need a Home.
+              <br />
+              <span className="text-terracotta-300">We Can Change That.</span>
+            </h1>
+            <p className="max-w-2xl mx-auto text-sage-200 text-lg">
+              Every year, millions of animals enter shelters across the U.S. The data tells a story
+              of preventable loss — and a path toward a no-kill future.
+            </p>
+          </motion.div>
+
+          {/* Hero stat cards */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+            {HERO_STATS.map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 + i * 0.1 }}
+                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 md:p-5 text-center group hover:bg-white/15 transition-colors"
+              >
+                <stat.icon className="w-6 h-6 mx-auto mb-2 text-terracotta-300 group-hover:scale-110 transition-transform" />
+                <p className="font-display text-2xl md:text-3xl font-bold">{stat.value}</p>
+                <p className="text-sm font-semibold text-white/90">{stat.label}</p>
+                <p className="text-xs text-sage-300 mt-0.5">{stat.sub}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── The Pet Family Bond ───────────────────────────────────────── */}
+      <section className="max-w-6xl mx-auto px-4 py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="bg-white border-3 border-black rounded-2xl shadow-neo p-6 md:p-10 flex flex-col md:flex-row items-center gap-8"
+        >
+          <div className="flex-shrink-0 w-32 h-32 md:w-40 md:h-40 rounded-2xl bg-gradient-to-br from-terracotta-100 to-terracotta-200 border-3 border-black flex items-center justify-center shadow-neo-sm">
+            <HandHeart className="w-16 h-16 md:w-20 md:h-20 text-terracotta-500" />
+          </div>
+          <div>
+            <SectionTag>The Bond</SectionTag>
+            <h2 className="font-display text-3xl md:text-4xl font-bold mt-3 mb-3">
+              <span className="text-terracotta-500">96%</span> of Americans Say Pets Are Family
+            </h2>
+            <p className="text-gray-600 text-lg leading-relaxed">
+              With 94 million households owning a pet — that's 71% of the nation — companion animals are
+              woven into the fabric of American life. Yet millions still enter the shelter system every year,
+              and hundreds of thousands don't make it out.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <a
+                href="https://worldanimalfoundation.org/advocate/pet-ownership-statistics/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-sage-600 hover:text-sage-800 transition-colors"
+              >
+                APPA 2025 Report <ExternalLink className="w-3 h-3" />
+              </a>
+              <span className="text-gray-300">•</span>
+              <a
+                href="https://www.driveresearch.com/market-research-company-blog/pet-adoption-statistics/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-sage-600 hover:text-sage-800 transition-colors"
+              >
+                Drive Research <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ── Shelter Pipeline & Acquisition ─────────────────────────────── */}
+      <section className="bg-sage-50 border-y-3 border-black py-16">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <SectionTag>The Numbers</SectionTag>
+            <h2 className="font-display text-3xl md:text-4xl font-bold mt-3">
+              The Shelter Pipeline
+            </h2>
+            <p className="text-gray-500 mt-2 max-w-xl mx-auto">
+              Where they come from, where they end up, and how many never find a home.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Funnel */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="bg-white border-3 border-black rounded-2xl shadow-neo p-6"
+            >
+              <h3 className="font-display font-bold text-lg mb-1">Shelter Outcomes (2025)</h3>
+              <p className="text-sm text-gray-500 mb-5">Cats & dogs — Shelter Animals Count</p>
+              <ShelterFunnel />
+              <a
+                href="https://www.shelteranimalscount.org/2025-report/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 mt-4 text-xs font-semibold text-sage-600 hover:text-sage-800"
+              >
+                Source: shelteranimalscount.org <ExternalLink className="w-3 h-3" />
+              </a>
+            </motion.div>
+
+            {/* Why they enter */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="bg-white border-3 border-black rounded-2xl shadow-neo p-6 flex flex-col"
+            >
+              <h3 className="font-display font-bold text-lg mb-1">Why Animals Enter Shelters</h3>
+              <p className="text-sm text-gray-500 mb-5">ASPCA national data</p>
+              <div className="flex-1 flex flex-col justify-center space-y-4">
+                {WHY_ENTER.map((item, i) => (
+                  <div key={item.reason}>
+                    <div className="flex justify-between mb-1">
+                      <span className="text-sm font-semibold text-gray-700">{item.reason}</span>
+                      <span className="text-sm font-bold text-gray-900">{item.pct}%</span>
+                    </div>
+                    <div className="h-6 bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-200">
+                      <AnimatedBar pct={item.pct} color={item.color} delay={i * 0.15} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <a
+                href="https://www.aspca.org/helping-shelters-people-pets/us-animal-shelter-statistics"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 mt-5 text-xs font-semibold text-sage-600 hover:text-sage-800"
+              >
+                Source: aspca.org <ExternalLink className="w-3 h-3" />
+              </a>
+            </motion.div>
+          </div>
+
+          {/* Acquisition chart */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-6 bg-white border-3 border-black rounded-2xl shadow-neo p-6"
+          >
+            <h3 className="font-display font-bold text-lg mb-1">Where People Get Their Pets</h3>
+            <p className="text-sm text-gray-500 mb-4">Acquisition sources — World Animal Foundation</p>
+            <AcquisitionChart />
+            <a
+              href="https://worldanimalfoundation.org/advocate/pet-ownership-statistics/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 mt-4 text-xs font-semibold text-sage-600 hover:text-sage-800"
+            >
+              Source: worldanimalfoundation.org <ExternalLink className="w-3 h-3" />
+            </a>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── Missouri Spotlight ─────────────────────────────────────────── */}
+      <section className="max-w-6xl mx-auto px-4 py-16">
+        <div className="text-center mb-10">
+          <SectionTag>
+            <MapPin className="w-3 h-3" /> Missouri Spotlight
+          </SectionTag>
+          <h2 className="font-display text-3xl md:text-4xl font-bold mt-3">
+            The Fight Starts Here
+          </h2>
+          <p className="text-gray-500 mt-2 max-w-xl mx-auto">
+            Missouri is ground zero for puppy mills and shelter overcrowding. Here's why local action matters.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-4">
+          {MISSOURI_FACTS.map((fact, i) => (
+            <motion.a
+              key={fact.title}
+              href={fact.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              className={`block p-6 rounded-2xl border-3 border-black shadow-neo-sm hover:shadow-neo hover:-translate-y-1 transition-all ${
+                fact.color === 'terracotta' ? 'bg-terracotta-50' : 'bg-sage-50'
+              }`}
+            >
+              <div
+                className={`w-12 h-12 rounded-xl border-2 border-black flex items-center justify-center mb-4 ${
+                  fact.color === 'terracotta'
+                    ? 'bg-terracotta-200 text-terracotta-700'
+                    : 'bg-sage-200 text-sage-700'
+                }`}
+              >
+                <fact.icon className="w-6 h-6" />
+              </div>
+              <h3 className="font-display font-bold text-lg mb-2">{fact.title}</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">{fact.description}</p>
+              <span className="inline-flex items-center gap-1 mt-3 text-xs font-semibold text-sage-600">
+                View source <ExternalLink className="w-3 h-3" />
+              </span>
+            </motion.a>
+          ))}
+        </div>
+      </section>
+
+      {/* ── What Adoption Solves ────────────────────────────────────────── */}
+      <section className="bg-gray-900 text-white py-16 border-y-3 border-black">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-white/10 border border-white/20 text-white/80">
+              <TrendingUp className="w-3 h-3" /> The Impact
+            </span>
+            <h2 className="font-display text-3xl md:text-4xl font-bold mt-3">
+              What Adoption Solves
+            </h2>
+            <p className="text-gray-400 mt-2 max-w-xl mx-auto">
+              Choosing adoption creates a ripple effect — from saving lives to strengthening communities.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {IMPACT_CARDS.map((card, i) => (
+              <motion.a
+                key={card.title}
+                href={card.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className="group relative overflow-hidden rounded-2xl border-2 border-white/10 p-6 hover:border-white/30 transition-all"
+              >
+                <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-15 group-hover:opacity-25 transition-opacity`} />
+                <div className="relative">
+                  <card.icon className="w-8 h-8 mb-3 text-white/70 group-hover:text-white transition-colors" />
+                  <p className="font-display text-3xl font-bold mb-1">{card.stat}</p>
+                  <h3 className="font-bold text-white/90 mb-1">{card.title}</h3>
+                  <p className="text-sm text-white/50">{card.detail}</p>
+                  <span className="inline-flex items-center gap-1 mt-3 text-xs font-semibold text-white/40 group-hover:text-white/70 transition-colors">
+                    Source <ExternalLink className="w-3 h-3" />
+                  </span>
+                </div>
+              </motion.a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── The 6% Solution CTA ────────────────────────────────────────── */}
+      <section className="max-w-6xl mx-auto px-4 py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="relative overflow-hidden bg-gradient-to-br from-sage-600 to-sage-800 rounded-2xl border-3 border-black shadow-neo-lg p-8 md:p-12 text-white text-center"
+        >
+          <div className="absolute inset-0 opacity-5">
+            <div
+              className="w-full h-full"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              }}
+            />
+          </div>
+          <div className="relative">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white/10 border-2 border-white/20 mb-6">
+              <Heart className="w-10 h-10 text-terracotta-300" />
+            </div>
+            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
+              Just <span className="text-terracotta-300">6%</span> More Would End It
+            </h2>
+            <p className="text-sage-200 text-lg max-w-2xl mx-auto mb-6">
+              If just 6% more American households chose adoption over purchasing, the entire country
+              would achieve no-kill status. That's the gap we're here to close.
+            </p>
+            <a
+              href="https://bestfriends.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-terracotta-500 text-white font-bold border-2 border-black shadow-neo-sm hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
+            >
+              Learn More at Best Friends
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ── Sources ────────────────────────────────────────────────────── */}
+      <section className="max-w-6xl mx-auto px-4 pb-16">
+        <div className="bg-white border-3 border-black rounded-2xl shadow-neo-sm overflow-hidden">
+          <button
+            onClick={() => setSourcesOpen(!sourcesOpen)}
+            className="w-full flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors"
+          >
+            <span className="font-display font-bold text-lg">Sources & References</span>
+            {sourcesOpen ? (
+              <ChevronUp className="w-5 h-5 text-gray-500" />
+            ) : (
+              <ChevronDown className="w-5 h-5 text-gray-500" />
+            )}
+          </button>
+          <AnimatePresence>
+            {sourcesOpen && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden"
+              >
+                <div className="px-6 pb-6 border-t-2 border-gray-100 pt-4">
+                  <ol className="space-y-2">
+                    {SOURCES.map((src) => (
+                      <li key={src.id} className="flex gap-3 text-sm">
+                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-sage-100 text-sage-700 font-bold text-xs flex items-center justify-center border border-sage-200">
+                          {src.id}
+                        </span>
+                        <div>
+                          <span className="text-gray-700">{src.text}</span>
+                          <br />
+                          <a
+                            href={src.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sage-600 hover:text-sage-800 underline underline-offset-2 text-xs break-all"
+                          >
+                            {src.url}
+                          </a>
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </section>
     </div>
   );
 }

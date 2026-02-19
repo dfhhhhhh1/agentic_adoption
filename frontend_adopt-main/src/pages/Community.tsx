@@ -7,6 +7,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../lib/api';
 
+import vetData from '../../../vet_locations.json'; // Ensure the path matches your folder structure
 // ── Types ────────────────────────────────────────────────────────────────────
 
 interface ShelterMarker {
@@ -19,6 +20,10 @@ interface ShelterMarker {
   pet_count: number;
 }
 
+interface VetClinic extends ShelterMarker {
+  is_24hr: boolean;
+  address: string;
+}
 interface LostPetReport {
   id: string;
   petName: string;
@@ -457,6 +462,8 @@ export function Community() {
   // ── Load Leaflet + shelters ────────────────────────────────────────────
   useEffect(() => {
     let cancelled = false;
+
+    
 
     async function init() {
       try {

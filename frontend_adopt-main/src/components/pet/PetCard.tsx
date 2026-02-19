@@ -10,6 +10,45 @@ interface PetCardProps {
   onClick: () => void;
 }
 
+const keywordMap: Record<string, { badge: string; color: keyof typeof badgeColors }> = {
+  // High Energy indicators
+  'eager': 'High Energy',
+  'energetic': 'High Energy',
+  'playful': 'Playful',
+  'jumpy': 'High Energy',
+  'active': 'High Energy',
+  
+  // Calm/Chill indicators
+  'calm': 'Calm',
+  'chill': 'Chill',
+  'relaxed': 'Calm',
+  'laid-back': 'Chill',
+  'gentle': 'Calm',
+  
+  // Friendly indicators
+  'friendly': 'Friendly',
+  'loves people': 'Friendly',
+  'social': 'Friendly',
+  'affectionate': 'Friendly',
+  'loving': 'Friendly',
+};
+
+const extractPersonalityKeyword = (description: string | undefined): { badge: string; color: keyof typeof badgeColors } => {
+  if (!description) return { badge: 'Friendly', color: 'Friendly' };
+  
+  const lowerDesc = description.toLowerCase();
+  
+  for (const [keyword, badgeInfo] of Object.entries(keywordMap)) {
+    if (lowerDesc.includes(keyword)) {
+      return { badge: badgeInfo, color: badgeInfo as keyof typeof badgeColors };
+    }
+  }
+  
+  return { badge: 'Friendly', color: 'Friendly' };
+};
+
+
+
 export function PetCard({ pet, matchScore, reasoning, onClick }: PetCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -17,7 +56,12 @@ export function PetCard({ pet, matchScore, reasoning, onClick }: PetCardProps) {
   const imageUrl = pet.image_urls && pet.image_urls.length > 0 
   ? pet.image_urls[0] 
   : pet.image_path; 
-  const personalityBadge = pet.personality_description?.[0] || 'Friendly';
+  const { badge: personalityBadge, color: badgeColor } = extractPersonalityKeyword(
+    typeof pet.personality_description === 'string' 
+      ? pet.personality_description 
+      : pet.personality_description?.[0]
+  );
+
   const badgeColors: Record<string, string> = {
     'Chill': 'bg-blue-100 text-blue-700 border-blue-300',
     'High Energy': 'bg-orange-100 text-orange-700 border-orange-300',
@@ -27,7 +71,7 @@ export function PetCard({ pet, matchScore, reasoning, onClick }: PetCardProps) {
   };
 
   const age = pet.age_text
-    ? `${pet.age_text} years`
+    ? `${pet.age_text}`
     : `${pet.age_months || 0} months`;
 
 
@@ -61,7 +105,7 @@ export function PetCard({ pet, matchScore, reasoning, onClick }: PetCardProps) {
         <div className="absolute top-3 left-3">
           <span
             className={`px-3 py-1 rounded-lg text-xs font-bold border-2 border-black shadow-neo-sm backdrop-blur-sm ${
-              badgeColors[personalityBadge] || badgeColors['Friendly']
+              badgeColors[personalityBadge]
             }`}
           >
             {personalityBadge}
