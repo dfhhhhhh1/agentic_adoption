@@ -16,6 +16,8 @@ export function Navigation({ activeTab, onTabChange, isApiOnline }: NavigationPr
     { id: 'motivation', label: 'Impact', icon: BarChart3 },
     { id: 'questions', label: 'Questions', icon: HelpCircle },
     { id: 'exchange', label: 'Exchange', icon: MessageCircle },
+    { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+
   ];
 
   return (

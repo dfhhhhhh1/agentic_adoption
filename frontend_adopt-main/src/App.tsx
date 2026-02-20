@@ -8,6 +8,7 @@ import { Exchange } from './pages/Exchange';
 import { api } from './lib/api';
 import { Motivation } from './pages/Motivation';
 import { Questions } from './pages/Questions';
+import { Analytics } from './pages/Analytics';
 
 
 
@@ -53,6 +54,8 @@ function App() {
         return <Exchange />;
       case 'questions':
         return <Questions />;
+      case 'analytics':
+        return <Analytics />;
       default:
         return <Dashboard />;
     }

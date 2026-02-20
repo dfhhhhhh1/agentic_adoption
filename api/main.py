@@ -43,6 +43,7 @@ from models.schemas import (
     Species,
 )
 from api.ask_router import router as ask_router
+from api.analytics_router import router as analytics_router
 
 logger = structlog.get_logger(__name__)
 
@@ -78,6 +79,7 @@ app.add_middleware(
 )
 
 app.include_router(ask_router)
+app.include_router(analytics_router)
 
 
 # ── Static file serving for pet images ────────────────────────────────────────
